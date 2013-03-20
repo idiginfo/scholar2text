@@ -1,0 +1,97 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+body > header {
+    background-color: #F1F1F1;
+    height: 40px;
+    overflow: hidden;
+    padding: 8px;
+    display: block;
+    margin: 0;
+    border-bottom: 4px solid #999;
+}
+
+body > header h1 {
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+form#pdf-upload {
+    display: inline;
+    margin-left: 100px;
+}
+
+form#pdf-upload label {
+    display: inline;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 0;
+    padding: 0;
+}
+
+form#pdf-upload input[type=file] {
+    font-size: 1.1em;
+    margin: 0;
+    padding: 0;
+}
+
+#main {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#main > .pane {
+    margin: 0;
+    padding: 0;
+    width: 50%;
+    float: left;
+    height: 100%;
+}
+
+#main > .pane .placeholder {
+    display: block;
+    margin: 25% 0 0 25%;
+    width: 50%;
+    text-align: center;
+    position: relative;
+    background-color: #FFF;
+    border: 4px solid #111;
+    border-radius: 10px;
+    font-size: 1.2em;
+    padding: 2em 0;
+
+}
+
+#left.pane {
+    background-color: #555;
+}
+
+#left.pane > iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#right.pane {
+    background-color: #FFF;
+}
+
+#right.pane .placeholder {
+    background-color: #555;
+    color: #FFF;
+}
+
+#right.pane > textarea {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}

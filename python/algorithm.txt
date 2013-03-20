@@ -1,0 +1,9 @@
+The algorithm will be to do the following:
+
+1. Accept PDF file and run it through pdf2txt five times, with -W attributes set from 1-5 for each run.
+2. Check each PDF for maximum word matches against the MOBY Words database
+3. Combine paragraph blocks and remove hyphenations
+4. Extract probable auxiliary (non-narrative) blocks of text
+5. Output narrative to simple XML format
+--
+5. Use regex patterns to attempt to parse references in document
