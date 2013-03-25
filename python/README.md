@@ -5,9 +5,11 @@ a work-in-progress, and is not yet ready for prime-time.
 
 Trying it out:
 
-1. Install Python-Numpy, Python-NLTK and Python PDFMiner libraries (sudo apt-get install python-ntlk python-pdfminer python-numpy)
-2. To convert a single document, run `python scholar2txt.py [YOUR-PDF-ARTICLE.pdf]`
-3. To iterate over a directory, run `python scholarfolder2txt.py [INPUTFOLDER] [OUTPUTFOLDER]`
+1. Install Python-Numpy, Python-NLTK and Python PDFMiner libraries (sudo apt-get install python-nltk python-pdfminer python-numpy)
+3. To convert a single document, run `python scholar2txt.py [YOUR-PDF-ARTICLE.pdf]`
+4. To iterate over a directory, run `python scholarfolder2txt.py [INPUTFOLDER] [OUTPUTFOLDER]`
+5. To skip narrative extraction, use the `--skipnarr` CLI argument
+
 
 Limitations:
 
