@@ -2,13 +2,14 @@
 
 namespace ScholarExtract\Controller;
 
+use Silex\Application;
 use Twig_Environment;
 use ScholarExtract\Library\PDFConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Upload\File as UploadFile;
 use Upload\Validation as UploadVal;
 use Upload\Storage\FileSystem as UploadFileSystem;
-
+use RuntimeException;
 
 /**
  * Converter Class
@@ -34,6 +35,10 @@ class Converter
 
     /**
      * Constructor
+     *
+     * @param Twig_Environment                    $twig
+     * @param Upload\Storage\FileSystem           $uploader
+     * @param ScholarExtract\Library\PDFConverter $converter
      */
     public function __construct(Twig_Environment $twig, UploadFileSystem $uploader, PDFConverter $converter)
     {
@@ -46,6 +51,8 @@ class Converter
 
     /**
      * Index HTML Page
+     *
+     * GET /
      */
     public function indexAction()
     {
@@ -56,11 +63,13 @@ class Converter
 
     /**
      * Upload Action
+     *
+     * POST /upload
      */
-    public function uploadAction(Request $req)
-    {
+    public function uploadAction(Request $req, Application $app)
+    {        
         //Setup the upload
-        $f = new UploadFile('pdffile', $app['uploader']);
+        $f = new UploadFile('pdffile', $this->uploader);
         $f->addValidations($this->getValidators());
 
         //Do the upload
@@ -68,8 +77,14 @@ class Converter
             $f->upload();
 
             $filepath  = 'uploads/' . $f->getNameWithExtension();
-            $txtOutput = convertToTxt($filepath);
 
+            try {
+                $txtOutput = $this->converter->convert($filepath);    
+            }
+            catch (RuntimeException $e) {
+                $txtOutput = false;
+            }
+            
             if ( ! $txtOutput) {
                 $txtOutput = '';
             }
@@ -88,7 +103,12 @@ class Converter
 
     // --------------------------------------------------------------
 
-    private getValidators()
+    /**
+     * Get file upload validators
+     *
+     * @return array  Array of Upload Validators
+     */
+    private function getValidators()
     {
         $mimeVal = new UploadVal\Mimetype('application/pdf');
         $sizeVal = new UploadVal\Size('10M');

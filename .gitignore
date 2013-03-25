@@ -1,3 +1,3 @@
 webapp/app/vendor
-uploads/*.pdf
+webapp/uploads/*.pdf
 python/*.pyc

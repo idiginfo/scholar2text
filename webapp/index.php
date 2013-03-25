@@ -16,107 +16,107 @@ use Exception;
 
 require(__DIR__ . '/app/vendor/autoload.php');
 
-App::main();
+App::main(App::DEVELOP);
 
 die();
 
 // ------------------------------------------------------------------
 
-//Setup the App
-$app = new Application();
+// //Setup the App
+// $app = new Application();
 
 
 
-$app->get('/', function(Application $app, Request $req) {
+// $app->get('/', function(Application $app, Request $req) {
     
-    return $app['twig']->render('index.html.twig');
+//     return $app['twig']->render('index.html.twig');
 
-})->bind('front');
+// })->bind('front');
 
-// ------------------------------------------------------------------
+// // ------------------------------------------------------------------
 
-$app->post('/upload', function(Application $app, Request $req) {
+// $app->post('/upload', function(Application $app, Request $req) {
     
-    //Setup the upload
-    $f = new UploadFile('pdffile', $app['uploader']);
-    $f->addValidations(getValidators());
+//     //Setup the upload
+//     $f = new UploadFile('pdffile', $app['uploader']);
+//     $f->addValidations(getValidators());
 
-    //Do the upload
-    try {
-        $f->upload();
+//     //Do the upload
+//     try {
+//         $f->upload();
 
-        $filepath  = 'uploads/' . $f->getNameWithExtension();
-        $txtOutput = convertToTxt($filepath);
+//         $filepath  = 'uploads/' . $f->getNameWithExtension();
+//         $txtOutput = convertToTxt($filepath);
 
-        if ($txtOutput == 'False') {
-            $txtOutput = '';
-        }
+//         if ($txtOutput == 'False') {
+//             $txtOutput = '';
+//         }
 
-        $output = array(
-            'pdf' => $filepath,
-            'txt' => $txtOutput
-        );
+//         $output = array(
+//             'pdf' => $filepath,
+//             'txt' => $txtOutput
+//         );
 
-        return $app->json($output, 200);
-    }
-    catch (Exception $e) {
-        return $app->json(array('messages' => $f->getErrors()), 400);
-    }
+//         return $app->json($output, 200);
+//     }
+//     catch (Exception $e) {
+//         return $app->json(array('messages' => $f->getErrors()), 400);
+//     }
 
-})->bind('upload');
+// })->bind('upload');
 
-// ------------------------------------------------------------------
+// // ------------------------------------------------------------------
 
-$app->get('/test', function(Application $app, Request $req) {
+// $app->get('/test', function(Application $app, Request $req) {
 
-    $file = __DIR__ . '/python/samples/sample4.pdf';
+//     $file = __DIR__ . '/python/samples/sample4.pdf';
 
-    ob_start();
-    var_dump(convertToTxt($file));
-    return "<pre>" . ob_get_clean() . "</pre>";
+//     ob_start();
+//     var_dump(convertToTxt($file));
+//     return "<pre>" . ob_get_clean() . "</pre>";
 
-})->bind('test');
+// })->bind('test');
 
 
-// ------------------------------------------------------------------
+// // ------------------------------------------------------------------
 
-$app->run();
+// $app->run();
 
-// ------------------------------------------------------------------
+// // ------------------------------------------------------------------
 
-/**
- * Get the upload validators
- */
-function getValidators()
-{
-        $mimeVal = new UploadVal\Mimetype('application/pdf');
-        $sizeVal = new UploadVal\Size('10M');
-        $mimeVal->setMessage("The file does not appear to be a PDF");
-        return array($mimeVal, $sizeVal);
-}
+// /**
+//  * Get the upload validators
+//  */
+// function getValidators()
+// {
+//         $mimeVal = new UploadVal\Mimetype('application/pdf');
+//         $sizeVal = new UploadVal\Size('10M');
+//         $mimeVal->setMessage("The file does not appear to be a PDF");
+//         return array($mimeVal, $sizeVal);
+// }
 
-// ------------------------------------------------------------------
+// // ------------------------------------------------------------------
 
-/**
- * Run external Python app to get the conversions
- *
- * @param string $file   Full path to file
- * @param boolean $narr  Try to extract the narrative?
- */
-function convertToTxt($file, $narr = true)
-{
-    $cmd = array(__DIR__ . '/python/scholar2txt.py');
+// /**
+//  * Run external Python app to get the conversions
+//  *
+//  * @param string $file   Full path to file
+//  * @param boolean $narr  Try to extract the narrative?
+//  */
+// function convertToTxt($file, $narr = true)
+// {
+//     $cmd = array(__DIR__ . '/python/scholar2txt.py');
 
-    if ( ! $narr) {
-        $cmd[] = '--skipnarr';
-    }
+//     if ( ! $narr) {
+//         $cmd[] = '--skipnarr';
+//     }
 
-    //Get the process and run it
-    $cmd[] = $file;
-    $builder = new ProcessBuilder($cmd);
-    $proc = $builder->getProcess();
-    $proc->run();
+//     //Get the process and run it
+//     $cmd[] = $file;
+//     $builder = new ProcessBuilder($cmd);
+//     $proc = $builder->getProcess();
+//     $proc->run();
 
-    //Return the output
-    return $proc->getOutput();
-}
+//     //Return the output
+//     return $proc->getOutput();
+// }
