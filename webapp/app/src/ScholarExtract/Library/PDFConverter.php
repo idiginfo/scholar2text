@@ -43,7 +43,7 @@ class PDFConverter
      * @param boolean $extractNarr  If false, will skip narrative extraction
      * @return string|boolean       False if could not be converted
      */
-    public function convert($file, $extractNarr = true)
+    public function convert($file, $extractNarr = false)
     {
         //File readable?
         if ( ! is_readable($file)) {

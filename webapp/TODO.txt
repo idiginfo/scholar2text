@@ -1,0 +1,8 @@
+- Fix bug where uploader doesn't re-upload the same file
+- Fix bug where error dialog shows loading icon
+- Change JS code so if it can't decode jqXHR.responseText.messages, it provides generic error msg
+- Re-organize into new repository and set the tasks in this file as issues in Github
+  - Add License
+  - Fork to private repo in Bitbucket for Google Ads
+- Build the 'about' pages
+- Build API with rate-limiting

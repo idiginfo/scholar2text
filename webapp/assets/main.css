@@ -1,3 +1,5 @@
+/* Body ------------------------------------------------------------ */
+
 body {
     margin: 0;
     padding: 0;
@@ -5,49 +7,63 @@ body {
     overflow: hidden;
 }
 
-body > header {
-    background-color: #F1F1F1;
-    height: 40px;
-    overflow: hidden;
-    padding: 8px;
-    display: block;
-    margin: 0;
-    border-bottom: 4px solid #999;
-}
+/* Layout --------------------------------------------------------- */
 
-body > header h1 {
-    font-size: 1.5em;
-    margin: 0;
-    padding: 0;
-    display: inline;
-}
-
-form#pdf-upload {
-    display: inline;
-    margin-left: 100px;
-}
-
-form#pdf-upload label {
-    display: inline;
-    font-weight: bold;
-    font-size: 1.1em;
-    margin: 0;
-    padding: 0;
-}
-
-form#pdf-upload input[type=file] {
-    font-size: 1.1em;
-    margin: 0;
-    padding: 0;
+#top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
 }
 
 #main {
     position: absolute;
-    top: 60px;
+    top: 42px;
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 1;
 }
+
+#top > #auxbar {
+    position: relative;
+    background-color: #F1F1F1;
+    padding: 1em 0;
+}
+
+/* Ads ----------------------------------------------------------- */
+
+#auxbar .ads {
+    margin: 0;
+    text-align: center;
+}
+
+#auxbar .ads > * {
+    margin: 0.5em;
+}
+
+/* Control Panel ------------------------------------------------- */
+
+form#pdf-upload {
+    margin-right: 0.5em;
+    text-align: center;
+}
+
+form#pdf-upload label {
+    display: none;
+}
+
+form#pdf-upload input[type=file] {
+    font-size: 1.1em;
+    margin: 5px 0;
+    color: #FFF;
+    padding: 0;
+    width: 160px;
+    overflow: hidden;
+}
+
+/* Main Preview Panel -------------------------------------------- */
 
 #main > .pane {
     margin: 0;
@@ -72,7 +88,21 @@ form#pdf-upload input[type=file] {
 }
 
 #left.pane {
-    background-color: #555;
+    background-color: #C1C1C1;
+}
+
+#right.pane {
+    background-color: #FFF;
+}
+
+#left.pane .placeholder {
+    background-color: #FFF;
+    border-color: #FFF;
+}
+
+#right.pane .placeholder {
+    background-color: #C1C1C1;
+    border-color: #C1C1C1;
 }
 
 #left.pane > iframe {
@@ -80,18 +110,26 @@ form#pdf-upload input[type=file] {
     height: 100%;
 }
 
-#right.pane {
-    background-color: #FFF;
-}
-
-#right.pane .placeholder {
-    background-color: #555;
-    color: #FFF;
-}
-
 #right.pane > textarea {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
+    font-family: monospace;
+}
+
+/* Widgets ------------------------------------------------------- */
+
+.dummyad {
+    width: 125px;
+    height: 125px;
+    float: right;
+    margin: 0 0.5em;
+}
+
+.dummyad > img {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }

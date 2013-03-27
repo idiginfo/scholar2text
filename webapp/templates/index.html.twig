@@ -4,10 +4,14 @@
         <title>{% block pagetitle %}Scholar2Text Demo{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <meta name='author' content='Casey McLaughlin' />
+        <meta name='description' content='A simple tool to convert PDFs to Text' />
+        <meta name='keywords' content='PDF, TXT, Text, Portable Document Format, Convert PDF, PDF to Text, Extract PDF' />
+
         {% block page_maincss %}
-        <link href="assets/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="assets/main.css" rel="stylesheet">
+        <link href="{{ path('front') }}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="{{ path('front') }}/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="{{ path('front') }}/assets/main.css" rel="stylesheet">
         {% endblock %}
 
         {% block page_resources %}
@@ -18,16 +22,54 @@
     </head>
     <body>
         
-        <header>
-            <h1>Scholar2Txt Demo Interface</h1>
+        <div id='top'>
 
-            <form id='pdf-upload' action='{{ url('upload') }}' method='post' enctype="multipart/form-data">
-                <label for='pdffile-input'>Select a PDF File:</label>
-                <input type='file' name='pdffile' id='pdffile-input' />
-                <button type='submit' class='btn btn-primary'>Upload</button>
-            </form>
-        </header>
+            <div class='navbar navbar-inverse navbar-static-top'>
+                <div class='navbar-inner'>
+                    <div class='container'>
 
+                        <a class="btn btn-navbar pull-right" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>                    
+
+                        <a class="brand" href="{{ url('front') }}">XtractPDF &raquo;</a>                    
+                        <form id='pdf-upload' action='{{ url('upload') }}' class="navbar-form pull-left" method='post' enctype="multipart/form-data">
+                            <label for='pdffile-input'>Convert PDF to Text</label>
+                            <input type='file' name='pdffile' id='pdffile-input' />
+                            <button type='submit'>Convert</button>
+                        </form>                    
+                        <div class='nav-collapse collapse'>
+                            <ul class='nav'>
+                                <li><a href=''>Settings</a></li>
+                                <li><a href=''>About</a></li>
+                                <li><a href=''>FAQ</a></li>
+                                <li><a href=''>API</a></li>
+                                <li><a href=''>Terms</a></li>
+                                <li><a href=''>Code</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id='auxbar'>
+                <div class='container'>
+                    <div class='row'>
+
+                        <p class='ads span12'>
+                            <img src='{{ url('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
+                            <img src='{{ url('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
+                            <img src='{{ url('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
         {% block page_content %}
         <div id='main'>
             <div id='left' class='pane'>
@@ -44,10 +86,10 @@
         {% block page_mainjs %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
             <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-            <script type='text/javascript' src='assets/js/bootstrap.min.js'></script>
-            <script type='text/javascript' src='assets/block-ui.js'></script>
-            <script type='text/javascript' src='assets/jquery-form.js'></script>
-            <script type='text/javascript' src='assets/main.js'></script>
+            <script type='text/javascript' src='{{ path('front') }}/assets/bootstrap/js/bootstrap.min.js'></script>
+            <script type='text/javascript' src='{{ path('front') }}/assets/block-ui.js'></script>
+            <script type='text/javascript' src='{{ path('front') }}/assets/jquery-form.js'></script>
+            <script type='text/javascript' src='{{ path('front') }}/assets/main.js'></script>
         {% endblock %}
     </body>
 </html>

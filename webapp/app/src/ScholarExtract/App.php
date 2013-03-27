@@ -99,7 +99,7 @@ class App extends SilexApp
 
         //Uploader (overwrite = true)
         $app['uploader'] = $app->share(function() use ($app) {
-            return new UploadFileSystem($this->basePath('/uploads'), true);
+            return new UploadFileSystem($this['pdf_filepath'], true);
         });
 
         //
@@ -115,6 +115,7 @@ class App extends SilexApp
         // Routes
         //
         $app->get('/', "convert.controller:indexAction")->bind('front');
+        $app->get('/pdf/{file}', "convert.controller:renderPdfAction")->bind('pdf');
         $app->post('/upload', "convert.controller:uploadAction")->bind('upload');
     }
 
@@ -124,6 +125,10 @@ class App extends SilexApp
     {
         $app =& $this;
 
+        //Filepath
+        $app['pdf_filepath'] = $this->basePath('/uploads');
+
+        //PDF Converter library
         $app['converter'] = $this->share(function() use ($app ) {
             return new Library\PDFConverter(new ProcessBuilder());
         });

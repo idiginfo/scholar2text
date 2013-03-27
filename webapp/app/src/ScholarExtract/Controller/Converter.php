@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Upload\File as UploadFile;
 use Upload\Validation as UploadVal;
 use Upload\Storage\FileSystem as UploadFileSystem;
-use RuntimeException;
+use RuntimeException, Exception;
 
 /**
  * Converter Class
@@ -68,15 +68,24 @@ class Converter
      */
     public function uploadAction(Request $req, Application $app)
     {        
-        //Setup the upload
+        //Setup a key
+        $key = md5(time() . rand(100000, 999999));
+
+        //Setup the file
         $f = new UploadFile('pdffile', $this->uploader);
+
+        //Rename it on upload to our key
+        $f->setName($key);
+
+        //Set validations
         $f->addValidations($this->getValidators());
 
         //Do the upload
         try {
             $f->upload();
 
-            $filepath  = 'uploads/' . $f->getNameWithExtension();
+            $filename = $f->getNameWithExtension();
+            $filepath = $app['pdf_filepath'] . '/' . $filename;
 
             try {
                 $txtOutput = $this->converter->convert($filepath);    
@@ -90,18 +99,57 @@ class Converter
             }
 
             $output = array(
-                'pdf' => $filepath,
-                'txt' => $txtOutput
+                'pdfurl' => $app['url_generator']->generate('pdf', array('file' => $filename)),
+                'pdf'    => $filename,
+                'txt'    => $txtOutput
             );
 
             return $app->json($output, 200);
         }
         catch (Exception $e) {
-            return $app->json(array('messages' => $f->getErrors()), 400);
+            return $this->abort($app, $f->getErrors(), 400);
         }
     }
 
     // --------------------------------------------------------------
+
+    /**
+     * Render a PDF and then destroy it
+     *
+     * @param string $file  The filename
+     */
+    public function renderPdfAction(Request $req, Application $app, $file)
+    {
+        //Get the filepath
+        $filepath = $app['pdf_filepath'] . '/' . $file;
+
+        //Will remove the file after it is done streaming
+        $app->finish(function() use ($filepath) {
+            unlink($filepath);
+        });
+
+        //If the file is readable, then send it; else 404
+        if (is_readable($filepath)) {
+            return $app->sendFile($filepath); //, 200, array('Content-Type' => 'application/pdf'));
+        }
+        else {
+            return $this->abort($app, "PDF file gone.  Uploaded PDFs are deleted immediately", 410);
+        }
+    }
+
+    // --------------------------------------------------------------
+
+    protected function abort(Application $app, array $messages, $code = 500)
+    {
+        if ( ! is_array($messages)) {
+            $messages = array($messages);
+        }
+
+        return $app->json(array('messages' => $messages), (int) $code);
+    }
+
+    // --------------------------------------------------------------
+
 
     /**
      * Get file upload validators
