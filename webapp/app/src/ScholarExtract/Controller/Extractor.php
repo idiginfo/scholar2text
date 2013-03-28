@@ -3,8 +3,6 @@
 namespace ScholarExtract\Controller;
 
 use Silex\Application;
-use Twig_Environment;
-use ScholarExtract\Library\PDFConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Upload\File as UploadFile;
 use Upload\Validation as UploadVal;
@@ -14,49 +12,36 @@ use RuntimeException, Exception;
 /**
  * Converter Class
  */
-class Converter
+class Extractor
 {
-    /**
-     * @var \Twig_Library
-     */
-    private $twig;
-
-    /**
-     * @var ScholarExtract\Library\PDFConverter
-     */
-    private $converter;
-
     /**
      * @var  Upload\Storage\FileSystem
      */
     private $uploader;
+
+    /**
+     * @var array
+     */
+    private $extractors
+
+    /**
+     * @var string Filepath of uploads
+     */
+    private $filepath
 
     // --------------------------------------------------------------
 
     /**
      * Constructor
      *
-     * @param Twig_Environment                    $twig
      * @param Upload\Storage\FileSystem           $uploader
-     * @param ScholarExtract\Library\PDFConverter $converter
+     * @param array                               $extractors
+     * @param string                              $filepath    Filepath of uploads
      */
-    public function __construct(Twig_Environment $twig, UploadFileSystem $uploader, PDFConverter $converter)
+    public function __construct(UploadFileSystem $uploader, array $extractors, $filepath)
     {
-        $this->twig      = $twig;
-        $this->uploader  = $uploader;
-        $this->converter = $converter;
-    }
-
-    // --------------------------------------------------------------
-
-    /**
-     * Index HTML Page
-     *
-     * GET /
-     */
-    public function indexAction()
-    {
-        return $this->twig->render('index.html.twig');
+        $this->uploader   = $uploader;
+        $this->extractors = $extractors;
     }
 
     // --------------------------------------------------------------
@@ -85,7 +70,7 @@ class Converter
             $f->upload();
 
             $filename = $f->getNameWithExtension();
-            $filepath = $app['pdf_filepath'] . '/' . $filename;
+            $filepath = $this->filepath. '/' . $filename;
 
             try {
                 $txtOutput = $this->converter->convert($filepath);    
@@ -116,12 +101,14 @@ class Converter
     /**
      * Render a PDF and then destroy it
      *
+     * GET /pdf
+     * 
      * @param string $file  The filename
      */
     public function renderPdfAction(Request $req, Application $app, $file)
     {
         //Get the filepath
-        $filepath = $app['pdf_filepath'] . '/' . $file;
+        $filepath = $this->filepath . '/' . $file;
 
         //Will remove the file after it is done streaming
         $app->finish(function() use ($filepath) {

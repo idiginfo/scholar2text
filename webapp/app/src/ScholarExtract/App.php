@@ -9,6 +9,7 @@ use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Upload\Storage\FileSystem as UploadFileSystem;
 use Symfony\Component\Process\ProcessBuilder;
+use Pimple;
 
 /**
  * Main App File
@@ -106,17 +107,22 @@ class App extends SilexApp
         // Controllers
         //
 
-        //ConvertInterface
-        $app['convert.controller'] = $app->share(function() use ($app) {
-            return new Controller\Converter($app['twig'], $app['uploader'], $app['converter']);
+        //Front Controller
+        $app['maininterface.controller'] = $app->share(function() use ($app) {
+            return new Controller\MainInterface($app['twig'], $app['extractors']);
+        });
+
+        //Extractor Controller
+        $app['extractor.controller'] = $app->share(function() use ($app) {
+            return new Controller\Extractor($app['uploader'], $app['extractors'], $app['pdf_filepath']);
         });
 
         //
         // Routes
         //
-        $app->get('/', "convert.controller:indexAction")->bind('front');
-        $app->get('/pdf/{file}', "convert.controller:renderPdfAction")->bind('pdf');
-        $app->post('/upload', "convert.controller:uploadAction")->bind('upload');
+        $app->get('/', "maininterface.controller:indexAction")->bind('front');
+        $app->get('/pdf/{file}', "extractor.controller:renderPdfAction")->bind('pdf');
+        $app->post('/upload', "extractor.controller:uploadAction")->bind('upload');
     }
 
     // --------------------------------------------------------------
@@ -128,10 +134,14 @@ class App extends SilexApp
         //Filepath
         $app['pdf_filepath'] = $this->basePath('/uploads');
 
-        //PDF Converter library
-        $app['converter'] = $this->share(function() use ($app ) {
-            return new Library\PDFConverter(new ProcessBuilder());
-        });
+        //PDF Extractors
+        $extractors = new Pimple();
+        $extractors[] = $app->share(function() use ($app) { return new CrossRefExtractor(); });
+        $extractors[] = $app->share(function() use ($app) { return new LaPDFText(); });
+        $extractors[] = $app->share(function() use ($app) { return new PDFMiner(); });
+        $extractors[] = $app->share(function() use ($app) { return new PDFX(); });
+        $extractors[] = $app->share(function() use ($app) { return new PopplerPDFToTxt(); });
+        $app['extractors'] = $extractors;
     }
 
 }

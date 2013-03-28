@@ -11,6 +11,7 @@
         {% block page_maincss %}
         <link href="{{ path('front') }}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="{{ path('front') }}/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="{{ path('front') }}/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
         <link href="{{ path('front') }}/assets/main.css" rel="stylesheet">
         {% endblock %}
 
@@ -39,15 +40,19 @@
                             <label for='pdffile-input'>Convert PDF to Text</label>
                             <input type='file' name='pdffile' id='pdffile-input' />
                             <button type='submit'>Convert</button>
-                        </form>                    
+                        </form>             
+
+                        <ul class='nav'>
+                            <li><a id='settings-toggle' href='#'><i style='color: #FFF;' class="icon-cog"></i></a></li>
+                        </ul>
+
                         <div class='nav-collapse collapse'>
                             <ul class='nav'>
-                                <li><a href=''>Settings</a></li>
-                                <li><a href=''>About</a></li>
-                                <li><a href=''>FAQ</a></li>
-                                <li><a href=''>API</a></li>
-                                <li><a href=''>Terms</a></li>
-                                <li><a href=''>Code</a></li>
+                                <li><a class='' href='#'>About</a></li>
+                                <li><a class='' href='#'>FAQ</a></li>
+                                <li><a class='' href='#'>API</a></li>
+                                <li><a class='' href='#'>Terms</a></li>
+                                <li><a class='' href='#'>Code</a></li>
                             </ul>
                         </div>
                     </div>
@@ -82,6 +87,34 @@
             </div>
         </div>
         {% endblock %}
+
+        {% block page_dialogs %}
+        <div class='dialogs'>
+            <div id='settings-dialog'>
+                <form>
+                    <fieldset>
+                        <legend>Select an Engine</legend>
+
+                        {% for k, extractor in extractors %}
+                            <div class='engine-type'>
+                                <label class='radio'>
+                                    <input type='radio' name='engine' value='{{ k }}' /> 
+                                    {{ extractor.getName() }}
+                                </label>
+
+                                <p>
+                                    {{ extractor.getDescription() }}
+                                    <a href='{{ extractor.getLink() }}'>More Info &raquo;</a>
+                                </p>
+                            </div>                        
+                        {% endfor %}
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        {% endblock %}
+
 
         {% block page_mainjs %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>

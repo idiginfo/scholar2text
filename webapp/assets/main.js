@@ -1,9 +1,31 @@
 $(document).ready(function() {
 
+    //
+    // Disable '#' Links
+    //
+    $('a[href="#"]').click(function(e) {
+        e.preventDefault();
+    });
+
+    //
+    // Layout Correction for Absolute Position Items
+    //
     fixMainPos();
     $(window).resize(function() {
         fixMainPos();
     });
+
+    //
+    // Setting dialog
+    //
+    $('#settings-toggle').click(function(e) {
+        e.preventDefault();
+
+        var pos = $('#settings-toggle').position().top + $('#settings-toggle').outerHeight();
+        $('#settings-dialog').css({ top: pos });
+        $('#settings-dialog').slideToggle('fast');
+    });
+
 
     //
     // File upload button functionality
@@ -25,7 +47,9 @@ $(document).ready(function() {
     });
 
 
-    //PDF Upload Functionality
+    //
+    // PDF Upload Functionality
+    //
     $('#pdf-upload').ajaxForm({
         success: function(responseText, statusText, xhr, jq) {
             console.log(responseText);

@@ -133,3 +133,29 @@ form#pdf-upload input[type=file] {
     margin: 0;
     padding: 0;
 }
+
+/* Settings ------------------------------------------------------ */
+
+.dialogs {
+    position: relative;
+}
+
+#settings-dialog {
+    display: none;
+    position: absolute;
+    width: 60%;
+    z-index: 100;
+    background-color: #FFF;
+    border: 1px solid #111;
+    margin: 0 20% 10px 20%;
+    padding: 10px;
+    box-shadow: 1px 1px 1px #111;
+}
+
+#settings-dialog .engine-type label.radio {
+    font-weight: bold;
+}
+
+#settings-dialog .engine-type > p {
+    margin-left: 20px;
+}

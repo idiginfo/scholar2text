@@ -1,14 +1,14 @@
 <?php
 
-namespace ScholarExtract\Library;
+ScholarExtract\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
 use RuntimeException;
 
 /**
- * PDF Converter
+ * PDFMiner Extractor
  */
-class PDFConverter
+class PDFMiner implements ExtractorInterface
 {
     /**
      * @var string  The python command to perform the conversion
@@ -22,6 +22,7 @@ class PDFConverter
 
     // --------------------------------------------------------------
 
+    
     /**
      * Constructor
      *
@@ -35,30 +36,43 @@ class PDFConverter
     }
 
     // --------------------------------------------------------------
-    
+
+    public function getName()
+    {
+        return "PDFMiner";
+    }
+
+    // --------------------------------------------------------------
+
+    public function getDescription()
+    {
+        return "A Python library for extracting text from a PDF.";        
+    }
+
+    // --------------------------------------------------------------
+
+    public function getLink()
+    {
+        return "http://www.unixuser.org/~euske/python/pdfminer/";
+    }
+
+    // --------------------------------------------------------------
+
     /**
      * Extract text from PDF file
      *
-     * @param string  $file         Realpath to file
-     * @param boolean $extractNarr  If false, will skip narrative extraction
-     * @return string|boolean       False if could not be converted
+     * @param string  $file    Realpath to file
+     * @return string|boolean  False if could not be converted
      */
-    public function convert($file, $extractNarr = false)
+    public function extract($filepath)
     {
-        //File readable?
-        if ( ! is_readable($file)) {
-            throw new \RuntimeException("The file is not readable: " . $file);
-        }
-
         //Clone the process builder
         $proc = clone $this->proc;
 
-        //Get the command
+        //Build the command
         $proc->add($this->pyCmd);
-        if ( ! $extractNarr) {
-            $proc->add('--skipnarr');
-        }
         $proc->add($file);
+        $proc->add('--skipnarr');
 
         //Get the process and run it
         $process = $proc->getProcess();
@@ -74,7 +88,7 @@ class PDFConverter
         //Return the output
         $output = $process->getOutput();
         return ($output == 'False') ? false : $output;  
-    }    
+    }
 }
 
-/* EOF: PDFConverter.php */
+/* EOF: PDFMiner.php */
