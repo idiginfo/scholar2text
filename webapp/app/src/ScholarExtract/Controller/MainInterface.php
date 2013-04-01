@@ -5,6 +5,7 @@ namespace ScholarExtract\Controller;
 use Silex\Application;
 use Twig_Environment;
 use Symfony\Component\HttpFoundation\Request;
+use ScholarExtract\Library\ExtractorBag;
 
 /**
  * Main Interface Controller
@@ -27,8 +28,9 @@ class MainInterface
      * Constructor
      *
      * @param Twig_Environment $twig
+     * @param ScholarExtract\Library\ExtractorBag $extractors
      */
-    public function __construct(Twig_Environment $twig, array $extractors)
+    public function __construct(Twig_Environment $twig, ExtractorBag $extractors)
     {
         $this->twig       = $twig;
         $this->extractors = $extractors;
@@ -44,7 +46,10 @@ class MainInterface
     public function indexAction(Application $app, Request $req)
     {
         //Dynamic data for the main interface
-        $data = array('extractors' => $this->extractors);
+        $data = array(
+            'extractors'       => $this->extractors,
+            'defaultExtractor' => 'PDFMiner'
+        );
 
         //Display it
         return $this->twig->render('index.html.twig', $data);

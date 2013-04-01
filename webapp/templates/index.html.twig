@@ -37,9 +37,11 @@
 
                         <a class="brand" href="{{ url('front') }}">XtractPDF &raquo;</a>                    
                         <form id='pdf-upload' action='{{ url('upload') }}' class="navbar-form pull-left" method='post' enctype="multipart/form-data">
-                            <label for='pdffile-input'>Convert PDF to Text</label>
-                            <input type='file' name='pdffile' id='pdffile-input' />
-                            <button type='submit'>Convert</button>
+                            <span class='upload-button'>
+                                <label for='pdffile-input'>Convert PDF to Text</label>
+                                <input type='file' name='pdffile' id='pdffile-input' />
+                                <button type='submit'>Convert</button>
+                            </span>
                         </form>             
 
                         <ul class='nav'>
@@ -98,7 +100,7 @@
                         {% for k, extractor in extractors %}
                             <div class='engine-type'>
                                 <label class='radio'>
-                                    <input type='radio' name='engine' value='{{ k }}' /> 
+                                    <input type='radio' name='engine' value='{{ k }}' {{ (extractor.GetName() == defaultExtractor) ? 'checked' : '' }} /> 
                                     {{ extractor.getName() }}
                                 </label>
 

@@ -7,10 +7,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Upload\File as UploadFile;
 use Upload\Validation as UploadVal;
 use Upload\Storage\FileSystem as UploadFileSystem;
+use Upload\Exception\UploadException;
 use RuntimeException, Exception;
+use ScholarExtract\Library\ExtractorBag;
 
 /**
- * Converter Class
+ * Extractor Controller
  */
 class Extractor
 {
@@ -22,12 +24,12 @@ class Extractor
     /**
      * @var array
      */
-    private $extractors
+    private $extractors;
 
     /**
      * @var string Filepath of uploads
      */
-    private $filepath
+    private $filepath;
 
     // --------------------------------------------------------------
 
@@ -35,10 +37,10 @@ class Extractor
      * Constructor
      *
      * @param Upload\Storage\FileSystem           $uploader
-     * @param array                               $extractors
+     * @param ScholarExtract\Library\ExtractorBag $extractors
      * @param string                              $filepath    Filepath of uploads
      */
-    public function __construct(UploadFileSystem $uploader, array $extractors, $filepath)
+    public function __construct(UploadFileSystem $uploader, ExtractorBag $extractors, $filepath)
     {
         $this->uploader   = $uploader;
         $this->extractors = $extractors;
@@ -49,23 +51,26 @@ class Extractor
     /**
      * Upload Action
      *
-     * POST /upload
+     * POST /upload {engine=string}
      */
     public function uploadAction(Request $req, Application $app)
     {        
-        //Setup a key
+        //Setup a unique key to name and identify the uploaded file
         $key = md5(time() . rand(100000, 999999));
 
-        //Setup the file
+        //Setup the file upload object
         $f = new UploadFile('pdffile', $this->uploader);
+        $f->setName($key); //Rename it on upload to our key
+        $f->addValidations($this->getValidators()); //Set validations
 
-        //Rename it on upload to our key
-        $f->setName($key);
+        //Determine which extractor engine to use
+        //$_POST['engine']
+        $extractor = $this->extractors->get($req->request->get('engine') ?: 'PDFMiner');
+        if ( ! $extractor) {
+            return $this->abort($app, "The specified extractor does not exist", 400);
+        }
 
-        //Set validations
-        $f->addValidations($this->getValidators());
-
-        //Do the upload
+        //Do the uploads
         try {
             $f->upload();
 
@@ -73,7 +78,7 @@ class Extractor
             $filepath = $this->filepath. '/' . $filename;
 
             try {
-                $txtOutput = $this->converter->convert($filepath);    
+                $txtOutput = $extractor->extract($filepath);    
             }
             catch (RuntimeException $e) {
                 $txtOutput = false;
@@ -91,7 +96,7 @@ class Extractor
 
             return $app->json($output, 200);
         }
-        catch (Exception $e) {
+        catch (UploadException $e) {
             return $this->abort($app, $f->getErrors(), 400);
         }
     }
@@ -112,7 +117,9 @@ class Extractor
 
         //Will remove the file after it is done streaming
         $app->finish(function() use ($filepath) {
-            unlink($filepath);
+            if (file_exists($filepath)) {
+                unlink($filepath);
+            }
         });
 
         //If the file is readable, then send it; else 404
@@ -126,7 +133,7 @@ class Extractor
 
     // --------------------------------------------------------------
 
-    protected function abort(Application $app, array $messages, $code = 500)
+    protected function abort(Application $app, $messages, $code = 500)
     {
         if ( ! is_array($messages)) {
             $messages = array($messages);

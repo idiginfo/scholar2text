@@ -135,15 +135,16 @@ class App extends SilexApp
         $app['pdf_filepath'] = $this->basePath('/uploads');
 
         //PDF Extractors
-        $extractors = new Pimple();
-        $extractors[] = $app->share(function() use ($app) { return new CrossRefExtractor(); });
-        $extractors[] = $app->share(function() use ($app) { return new LaPDFText(); });
-        $extractors[] = $app->share(function() use ($app) { return new PDFMiner(); });
-        $extractors[] = $app->share(function() use ($app) { return new PDFX(); });
-        $extractors[] = $app->share(function() use ($app) { return new PopplerPDFToTxt(); });
-        $app['extractors'] = $extractors;
+        $app['extractors'] = $this->share(function() use ($app) {
+            return new Library\ExtractorBag(array(
+                new Extractor\CrossRefExtractor(),
+                new Extractor\LaPDFText(),
+                new Extractor\PDFMiner(),
+                new Extractor\PDFX(),
+                new Extractor\PopplerPDFtoTxt(),
+            ));
+        });
     }
-
 }
 
 /* EOF: App.php */

@@ -1,6 +1,6 @@
 <?php
 
-ScholarExtract\Extractor;
+namespace ScholarExtract\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
 use RuntimeException;
@@ -37,21 +37,21 @@ class CrossRefExtractor implements ExtractorInterface
     
     // --------------------------------------------------------------
 
-    public function getName()
+    static public function getName()
     {
         return "CrossRef PDFExtractor for Citations";
     }
 
     // --------------------------------------------------------------
 
-    public function getDescription()
+    static public function getDescription()
     {
         return "A Ruby library to extract bibliographic citations from a PDF";        
     }
 
     // --------------------------------------------------------------
 
-    public function getLink()
+    static public function getLink()
     {
         return "https://github.com/CrossRef/pdfextract";
     }

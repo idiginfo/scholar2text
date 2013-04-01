@@ -7,6 +7,8 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
+    // ------------------------------------------------------------------
+
     //
     // Layout Correction for Absolute Position Items
     //
@@ -14,6 +16,8 @@ $(document).ready(function() {
     $(window).resize(function() {
         fixMainPos();
     });
+
+    // ------------------------------------------------------------------
 
     //
     // Setting dialog
@@ -26,6 +30,7 @@ $(document).ready(function() {
         $('#settings-dialog').slideToggle('fast');
     });
 
+    // ------------------------------------------------------------------
 
     //
     // File upload button functionality
@@ -44,13 +49,15 @@ $(document).ready(function() {
     $('#pdf-upload #pdffile-input').change(function() {
         var fname = basename($(this).val());
         $('#pdf-upload').submit();
-    });
+    }); 
 
+    // ------------------------------------------------------------------
 
     //
     // PDF Upload Functionality
     //
     $('#pdf-upload').ajaxForm({
+        data: { engine: $('input[name=engine]:selected').attr('value') },
         success: function(responseText, statusText, xhr, jq) {
             console.log(responseText);
 
@@ -99,6 +106,8 @@ function fixMainPos()
     var topHeight = $('#top').outerHeight();
     $('#main').css('top', topHeight);
 }
+
+// ------------------------------------------------------------------
 
 function basename(path, suffix) 
 {

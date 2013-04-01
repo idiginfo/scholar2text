@@ -45,11 +45,6 @@ body {
 
 /* Control Panel ------------------------------------------------- */
 
-form#pdf-upload {
-    margin-right: 0.5em;
-    text-align: center;
-}
-
 form#pdf-upload label {
     display: none;
 }

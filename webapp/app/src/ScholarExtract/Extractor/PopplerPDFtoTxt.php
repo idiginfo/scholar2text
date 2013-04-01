@@ -1,6 +1,6 @@
 <?php
 
-ScholarExtract\Extractor;
+namespace ScholarExtract\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
 use RuntimeException;
@@ -37,21 +37,21 @@ class PopplerPDFtoTxt implements ExtractorInterface
 
     // --------------------------------------------------------------
 
-    public function getName()
+    static public function getName()
     {
         return "LaPDFText";
     }
 
     // --------------------------------------------------------------
 
-    public function getDescription()
+    static public function getDescription()
     {
         return "A JAVA application for extracting PDF to XML for scientific articles.";        
     }
 
     // --------------------------------------------------------------
 
-    public function getLink()
+    static public function getLink()
     {
         return "https://code.google.com/p/lapdftext/";
     }

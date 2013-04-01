@@ -1,7 +1,6 @@
 <?php
 
-
-ScholarExtract\Extractor;
+namespace ScholarExtract\Extractor;
 
 use Guzzle\Http\Client as GuzzleClient;
 use RuntimeException;
@@ -38,21 +37,21 @@ class PDFX implements ExtractorInterface
     
     // --------------------------------------------------------------
 
-    public function getName()
+    static public function getName()
     {
-        return "A web service for extracting PDF to XML for scientific articles";
+        return "PDFX";
     }
 
     // --------------------------------------------------------------
 
-    public function getDescription()
+    static public function getDescription()
     {
-        return "A Ruby library to extract bibliographic citations from a PDF";        
+        return "A library.. fix me";        
     }
 
     // --------------------------------------------------------------
 
-    public function getLink()
+    static public function getLink()
     {
         return "https://github.com/CrossRef/pdfextract";
     }

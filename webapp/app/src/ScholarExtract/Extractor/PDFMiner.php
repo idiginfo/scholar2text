@@ -1,6 +1,6 @@
 <?php
 
-ScholarExtract\Extractor;
+namespace ScholarExtract\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
 use RuntimeException;
@@ -31,27 +31,31 @@ class PDFMiner implements ExtractorInterface
      */
     public function __construct(ProcessBuilder $proc = null, $pdfCmd = null)
     {
-        $this->pyCmd = $pdfCmd ?: realpath(__DIR__ . '/../../../../../python/scholar2txt.py');
-        $this->proc = $proc ?: new ProcessBuilder();
+        $this->pyCmd = $pdfCmd ?: realpath('/usr/bin/pdf2txt');
+        $this->proc  = $proc ?: new ProcessBuilder();
+
+        if ( ! is_executable($this->pyCmd)) {
+            throw new RuntimeException("The command does not exist or is not executable: ". $this->pyCmd);
+        }
     }
 
     // --------------------------------------------------------------
 
-    public function getName()
+    static public function getName()
     {
         return "PDFMiner";
     }
 
     // --------------------------------------------------------------
 
-    public function getDescription()
+    static public function getDescription()
     {
         return "A Python library for extracting text from a PDF.";        
     }
 
     // --------------------------------------------------------------
 
-    public function getLink()
+    static public function getLink()
     {
         return "http://www.unixuser.org/~euske/python/pdfminer/";
     }
@@ -71,8 +75,8 @@ class PDFMiner implements ExtractorInterface
 
         //Build the command
         $proc->add($this->pyCmd);
-        $proc->add($file);
-        $proc->add('--skipnarr');
+        $proc->add($filepath);
+        $proc->add('-t text');
 
         //Get the process and run it
         $process = $proc->getProcess();
