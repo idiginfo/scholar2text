@@ -31,7 +31,7 @@ class PopplerPDFtoTxt implements ExtractorInterface
      */
     public function __construct(ProcessBuilder $proc = null, $cmd = null)
     {
-        $this->cmd  = $cmd ?: realpath('somecmd');
+        $this->cmd  = $cmd ?: realpath('/usr/bin/pdftotext');
         $this->proc = $proc ?: new ProcessBuilder();
     }
 
@@ -39,21 +39,21 @@ class PopplerPDFtoTxt implements ExtractorInterface
 
     static public function getName()
     {
-        return "LaPDFText";
+        return "Poppler PDF to Text";
     }
 
     // --------------------------------------------------------------
 
     static public function getDescription()
     {
-        return "A JAVA application for extracting PDF to XML for scientific articles.";        
+        return "A CLI PDF to Text Tool";        
     }
 
     // --------------------------------------------------------------
 
     static public function getLink()
     {
-        return "https://code.google.com/p/lapdftext/";
+        return "http://poppler.freedesktop.org/";
     }
 
     // --------------------------------------------------------------
@@ -66,7 +66,28 @@ class PopplerPDFtoTxt implements ExtractorInterface
      */
     public function extract($filepath)
     {
-        throw new \BadMethodCallException("Not yet implemented");
+        //Clone the process builder
+        $proc = clone $this->proc;
+
+        //Build the command
+        $proc->add($this->cmd);
+        $proc->add('-q');
+        $proc->add($filepath); 
+        $proc->add('-');       
+
+        //Get the process and run it
+        $process = $proc->getProcess();
+        $process->run();
+
+        if ($process->isSuccessful()) {
+            return $process->getOutput();
+        }
+        else {
+            throw new RuntimeException($process->getExitCodeText());
+        }
+
+        //Return the output
+        return $process->getOutput();       
     }
 }
 

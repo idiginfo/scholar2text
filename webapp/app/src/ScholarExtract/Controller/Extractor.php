@@ -64,8 +64,7 @@ class Extractor
         $f->setName($key); //Rename it on upload to our key
         $f->addValidations($this->getValidators()); //Set validations
 
-        //Determine which extractor engine to use
-        //$_POST['engine']
+        //Determine which extractor engine to use ($_POST['engine'])
         $extractor = $this->extractors->get($req->request->get('engine') ?: 'PDFMiner');
         if ( ! $extractor) {
             return $this->abort($app, "The specified extractor does not exist", 400);
@@ -92,7 +91,8 @@ class Extractor
             $output = array(
                 'pdfurl' => $app['url_generator']->generate('pdf', array('file' => $filename)),
                 'pdf'    => $filename,
-                'txt'    => $txtOutput
+                'txt'    => $txtOutput,
+                'engine' => $extractor::getName()
             );
 
             return $app->json($output, 200);
@@ -134,6 +134,9 @@ class Extractor
 
     // --------------------------------------------------------------
 
+    /**
+     * Abort the request
+     */
     protected function abort(Application $app, $messages, $code = 500)
     {
         if ( ! is_array($messages)) {

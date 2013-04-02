@@ -1,3 +1,4 @@
+- Fix bug where one-time PDF view link isn't deleting the PDFs
 - Fix bug where uploader doesn't re-upload the same file
 - Fix bug where error dialog shows loading icon
 - Change JS code so if it can't decode jqXHR.responseText.messages, it provides generic error msg
@@ -5,4 +6,10 @@
   - Add License
   - Fork to private repo in Bitbucket for Google Ads
 - Build the 'about' pages
-- Build API with rate-limiting
+- Build API with rate-limiting (see NGINX for this)
+
+BUILD VM JUST FOR THIS (:)
+--- [[ all typical PHP stuff ]]
+--- sudo apt-get install python-nltk python-numpy
+--- sudo apt-get install poppler-utils
+--- sudo apt-get install openjdk-6-jre

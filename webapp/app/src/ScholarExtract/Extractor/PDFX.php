@@ -6,7 +6,7 @@ use Guzzle\Http\Client as GuzzleClient;
 use RuntimeException;
 
 /**
- * PDFX Extractor
+ * PDFX Web Service -- NOT IN USE NOT IN USE
  */
 class PDFX implements ExtractorInterface
 {
@@ -46,14 +46,14 @@ class PDFX implements ExtractorInterface
 
     static public function getDescription()
     {
-        return "A library.. fix me";        
+        return "A fully-automated PDF-to-XML conversion of scientific articles";        
     }
 
     // --------------------------------------------------------------
 
     static public function getLink()
     {
-        return "https://github.com/CrossRef/pdfextract";
+        return "http://pdfx.cs.man.ac.uk/";
     }
 
     // --------------------------------------------------------------

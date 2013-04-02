@@ -140,7 +140,6 @@ class App extends SilexApp
                 new Extractor\CrossRefExtractor(),
                 new Extractor\LaPDFText(),
                 new Extractor\PDFMiner(),
-                new Extractor\PDFX(),
                 new Extractor\PopplerPDFtoTxt(),
             ));
         });

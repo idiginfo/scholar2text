@@ -57,7 +57,14 @@ $(document).ready(function() {
     // PDF Upload Functionality
     //
     $('#pdf-upload').ajaxForm({
-        data: { engine: $('input[name=engine]:selected').attr('value') },
+        beforeSubmit: function(arr, $form, options) {
+            arr.push({ name: 'engine', value: $('input[name=engine]:checked').attr('value') });
+
+            $('#settings-dialog').slideUp('fast');
+            $.blockUI({ message: '<h1>Analyzing PDF...  Please wait</h1><p>(this can take a few moments)</p>' });
+            $('.blockUI').click(function() { /* nuthin */ });
+        },        
+
         success: function(responseText, statusText, xhr, jq) {
             console.log(responseText);
 
@@ -73,6 +80,7 @@ $(document).ready(function() {
 
             $.unblockUI();
         },
+
         error: function(jqXHR, textStatus, errorThrown) {
 
             //Kill the loading dialog
@@ -90,10 +98,6 @@ $(document).ready(function() {
             $.blockUI({ message: msg, cursor: 'default', cursorReset: 'default', blockMsgClass: 'errorMsg'});
             $('.blockUI').click(function() { $.unblockUI(); });
 
-        },
-        beforeSubmit: function() {
-            $.blockUI({ message: '<h1>Analyzing PDF...  Please wait</h1><p>(this can take a few moments)</p>' });
-            $('.blockUI').click(function() { /* nuthin */ });
         }
     });
 
