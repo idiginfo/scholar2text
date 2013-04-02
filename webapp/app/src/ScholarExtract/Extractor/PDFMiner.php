@@ -75,8 +75,10 @@ class PDFMiner implements ExtractorInterface
 
         //Build the command
         $proc->add($this->pyCmd);
-        $proc->add($filepath);
-        $proc->add('-t text');
+        $proc->add('-t');
+        $proc->add('text');
+        $proc->add('-A');
+        $proc->add($filepath);        
 
         //Get the process and run it
         $process = $proc->getProcess();

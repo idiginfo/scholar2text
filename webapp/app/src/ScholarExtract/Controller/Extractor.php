@@ -44,6 +44,7 @@ class Extractor
     {
         $this->uploader   = $uploader;
         $this->extractors = $extractors;
+        $this->filepath   = $filepath;
     }
 
     // --------------------------------------------------------------
@@ -77,12 +78,12 @@ class Extractor
             $filename = $f->getNameWithExtension();
             $filepath = $this->filepath. '/' . $filename;
 
-            try {
-                $txtOutput = $extractor->extract($filepath);    
-            }
-            catch (RuntimeException $e) {
-                $txtOutput = false;
-            }
+            // try {
+            $txtOutput = $extractor->extract($filepath);    
+            // }
+            // catch (RuntimeException $e) {
+            //     $txtOutput = false;
+            // }
             
             if ( ! $txtOutput) {
                 $txtOutput = '';
