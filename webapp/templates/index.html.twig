@@ -1,130 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>{% block pagetitle %}Scholar2Text Demo{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html.twig' %}
 
-        <meta name='author' content='Casey McLaughlin' />
-        <meta name='description' content='A simple tool to convert PDFs to Text' />
-        <meta name='keywords' content='PDF, TXT, Text, Portable Document Format, Convert PDF, PDF to Text, Extract PDF' />
+{% block page_top_content %}
+<h3 class='noscript text-error' title='Try another web browser&hellip;'>XtractPDF requires JavaScript</h3>
 
-        {% block page_maincss %}
-        <link href="{{ path('front') }}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="{{ path('front') }}/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="{{ path('front') }}/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
-        <link href="{{ path('front') }}/assets/main.css" rel="stylesheet">
-        {% endblock %}
+<form id='pdf-upload' action='{{ url('upload') }}' method='post' enctype="multipart/form-data">
+    <span class='upload-button'>
+        <label for='pdffile-input'>Convert PDF to Text</label>
+        <input type='file' name='pdffile' id='pdffile-input' />
+        <button type='submit'>Convert</button>
+    </span>
+</form>             
 
-        {% block page_resources %}
-        {% endblock %}
-
-        {% block page_headers %}
-        {% endblock %}
-    </head>
-    <body>
-        
-        <div id='top'>
-
-            <div class='navbar navbar-inverse navbar-static-top'>
-                <div class='navbar-inner'>
-                    <div class='container'>
-
-                        <a class="btn btn-navbar pull-right" data-toggle="collapse" data-target=".nav-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </a>                    
-
-                        <a class="brand" href="{{ url('front') }}">XtractPDF &raquo;</a>                    
-                        <form id='pdf-upload' action='{{ url('upload') }}' class="navbar-form pull-left" method='post' enctype="multipart/form-data">
-                            <span class='upload-button'>
-                                <label for='pdffile-input'>Convert PDF to Text</label>
-                                <input type='file' name='pdffile' id='pdffile-input' />
-                                <button type='submit'>Convert</button>
-                            </span>
-                        </form>             
-
-                        <ul class='nav'>
-                            <li><a id='settings-toggle' href='#'><i style='color: #FFF;' class="icon-cog"></i></a></li>
-                        </ul>
-
-                        <div class='nav-collapse collapse'>
-                            <ul class='nav'>
-                                <li><a class='' href='#'>About</a></li>
-                                <li><a class='' href='#'>FAQ</a></li>
-                                <li><a class='' href='#'>API</a></li>
-                                <li><a class='' href='#'>Terms</a></li>
-                                <li><a class='' href='#'>Code</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id='auxbar'>
-                <div class='container'>
-                    <div class='row'>
-
-                        <p class='ads span12'>
-                            <img src='{{ url('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
-                            <img src='{{ url('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
-                            <img src='{{ url('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
-                        </p>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        
-        {% block page_content %}
-        <div id='main'>
-            <div id='left' class='pane'>
-                <p class='placeholder'>PDF will Appear Here</p>
-            </div>
+<ul class='pagelinks'>
+    <li><a href='#settings-modal' role='button' data-toggle='modal' id='settings-toggle'><i class="icon-cog"></i>Options</a></li>
+    <li><a data-toggle="modal" href="{{ url('about') }}" data-target="#about-modal"><i class="icon-question-sign"></i>Info</a></a>
+    <li><a data-toggle="modal" href="{{ url('apidocs') }}" data-target="#apidocs-modal"><i class="icon-globe"></i>API</a></li>
+</ul>
+{% endblock %}
+    
+{% block page_content %}
+<div id='main'>
+    <div id='left' class='pane'>
+        <p class='placeholder'>PDF will Appear Here</p>
+    </div>
 
 
-            <div id='right' class='pane'>
-                <p class='placeholder'>Text will Appear Here</p>
-            </div>
-        </div>
-        {% endblock %}
+    <div id='right' class='pane'>
+        <p class='placeholder'>Text will Appear Here</p>
+    </div>
+</div>
 
-        {% block page_dialogs %}
-        <div class='dialogs'>
-            <div id='settings-dialog'>
-                <form>
-                    <fieldset>
-                        <legend>Select an Engine</legend>
+{# Settings Modal #}
+<div id='settings-modal' class='modal fade hide' tabindex='-1' role='dialog' aria-labelledby="settings-modal-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="settings-modal-label">Settings</h3>
+    </div>    
+    <form class='modal-body'>
+        <fieldset>
+            <legend>Select an Engine</legend>
 
-                        {% for k, extractor in extractors %}
-                            <div class='engine-type'>
-                                <label class='radio'>
-                                    <input type='radio' name='engine' value='{{ k }}' {{ (extractor.GetName() == defaultExtractor) ? 'checked' : '' }} /> 
-                                    {{ extractor.getName() }}
-                                </label>
+            {% for k, extractor in extractors %}
+                <div class='engine-type'>
+                    <label class='radio'>
+                        <input type='radio' name='engine' value='{{ k }}' {{ (extractor.GetName() == defaultExtractor) ? 'checked' : '' }} /> 
+                        {{ extractor.getName() }}
+                    </label>
 
-                                <p>
-                                    {{ extractor.getDescription() }}
-                                    <a href='{{ extractor.getLink() }}' title='More Information about this Extraction Tool' target='_blank'>More Info &raquo;</a>
-                                </p>
-                            </div>                        
-                        {% endfor %}
+                    <p>
+                        {{ extractor.getDescription() }}
+                        <a href='{{ extractor.getLink() }}' title='More Information about this Extraction Tool' target='_blank'>More Info &raquo;</a>
+                    </p>
+                </div>                        
+            {% endfor %}
+        </fieldset>
+    </form>
+    <div class="modal-footer">
+        <button data-dismiss="modal" aria-hidden="true" class="btn btn-primary">Okay</button>
+    </div>    
+</div>
 
-                    </fieldset>
-                </form>
-            </div>
-        </div>
-        {% endblock %}
+{# About Modal #}
+<div id='about-modal' class='modal fw fade hide' tabindex='-1' role='dialog' aria-labelledby='about-modal-label' aria-hidden='true'>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="about-modal-label">About XtractPDF</h3>
+    </div>
+    <div class='modal-body'>
+    </div>
+    <div class="modal-footer">
+        <button data-dismiss="modal" aria-hidden="true" class="btn btn-primary">Got it!</button>
+    </div>
+</div>
 
-
-        {% block page_mainjs %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-            <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-            <script type='text/javascript' src='{{ path('front') }}/assets/bootstrap/js/bootstrap.min.js'></script>
-            <script type='text/javascript' src='{{ path('front') }}/assets/block-ui.js'></script>
-            <script type='text/javascript' src='{{ path('front') }}/assets/jquery-form.js'></script>
-            <script type='text/javascript' src='{{ path('front') }}/assets/main.js'></script>
-        {% endblock %}
-    </body>
-</html>
+{# API Docs Modal #}
+<div id='apidocs-modal' class='modal fw fade hide' tabindex='-1' role='dialog' aria-labelledby='apidocs-modal-label' aria-hidden='true'>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="apidocs-modal-label">XtractPDF API</h3>
+    </div>
+    <div class='modal-body'>
+    </div>
+    <div class="modal-footer">
+        <button data-dismiss="modal" aria-hidden="true" class="btn btn-primary">Got it!</button>
+    </div>
+</div>
+{% endblock %}

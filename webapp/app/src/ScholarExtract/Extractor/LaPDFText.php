@@ -3,7 +3,7 @@
 namespace ScholarExtract\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
-use RuntimeException;
+use ScholarExtract\ExtractorException;
 
 /**
  * LaPDFText Extractor
@@ -66,7 +66,7 @@ class LaPDFText implements ExtractorInterface
      */
     public function extract($filepath)
     {
-        throw new \BadMethodCallException("Not yet implemented");
+        throw new ExtractorException("Not yet implemented");
     }
 }
 

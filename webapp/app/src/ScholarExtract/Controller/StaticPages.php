@@ -1,22 +1,17 @@
 <?php
 
-/**
- * Static Pages Controller
- */
+namespace ScholarExtract\Controller;
+
+use Twig_Environment;
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+
 class StaticPages
 {
-    /**
-     * @var Twig_Environment $twig
-     */
     private $twig;
 
     // --------------------------------------------------------------
 
-    /**
-     * Constructor
-     *
-     * @param Twig_Environment $twig
-     */
     public function __construct(Twig_Environment $twig)
     {
         $this->twig = $twig;
@@ -24,31 +19,38 @@ class StaticPages
 
     // --------------------------------------------------------------
 
-    public function about()
+    public function aboutAction(Application $app, Request $req)
     {
-        //About Page
+        return $this->render('about.html.twig', "About XtractPDF", $app, $req);
     }
 
     // --------------------------------------------------------------
 
-    public function api()
+    public function apiDocsAction(Application $app, Request $req)
     {
-        //API Page
+        return $this->render('apidocs.html.twig', "XtractPDF API", $app, $req);
     }
 
     // --------------------------------------------------------------
 
-    public function terms()
+    private function render($toRender, $title, Application $app, Request $req)
     {
-        //Terms of Use page
-    }
+        //Setup data
+        $data = array('page_title' => $title);
 
-    // --------------------------------------------------------------
+        //Load the pagecontent
+        $pageContent = $this->twig->render($toRender, $data);
 
-    public function code()
-    {
-        //Link to Github
+        //If AJAX, only get the content
+        if ($req->isXmlHttpRequest()) {
+            return $pageContent;
+        }
+        else {
+            $data['page_content'] = $pageContent;
+            return $this->twig->render('static.html.twig', $data);
+        }
     }
+    
 }
 
 /* EOF: StaticPages.php */

@@ -7,10 +7,12 @@ body {
     overflow: hidden;
 }
 
-/* Layout --------------------------------------------------------- */
+/* Basic Layout Sections ------------------------------------------- */
 
 #top {
     position: absolute;
+    background-color: #F1F1F1;
+    padding: 8px;
     top: 0;
     left: 0;
     right: 0;
@@ -26,36 +28,75 @@ body {
     z-index: 1;
 }
 
-#top > #auxbar {
-    position: relative;
-    background-color: #F1F1F1;
-    padding: 1em 0;
-}
+/* Top Section ----------------------------------------------------- */
 
-/* Ads ----------------------------------------------------------- */
-
-#auxbar .ads {
-    margin: 0;
+#top #main-header {
     text-align: center;
+    margin-right: 0.5em;
 }
 
-#auxbar .ads > * {
-    margin: 0.5em;
+#top #main-header h1 {
+    font-size: 1.3em;
+    line-height: 1.35em;
+    margin: 1px;
 }
 
-/* Control Panel ------------------------------------------------- */
+#top h3.noscript {
+    font-size: 1.1em;
+    font-weight: bold;
+    line-height: 1.15em;
+}
 
-form#pdf-upload label {
+#top form#pdf-upload {
+    margin: 0 auto 0.5em 0;
     display: none;
 }
 
-form#pdf-upload input[type=file] {
+#top #settings-toggle {
+    display: none;
+}
+
+#top form#pdf-upload label {
+    display: none;
+}
+
+#top form#pdf-upload input[type=file] {
     font-size: 1.1em;
-    margin: 5px 0;
     color: #FFF;
     padding: 0;
     width: 160px;
     overflow: hidden;
+}
+
+#top form#pdf-upload label.btn {
+    width: 162px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+#top .pagelinks {
+    list-style-type: none;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#top .pagelinks > li {
+    display: inline;
+    margin: 0 5px 0 0;
+}
+
+#top .pagelinks > li a:hover {
+    text-decoration: none;
+}
+
+
+#top .ads {
+    margin: 0;
+    text-align: center;
+}
+
+#top .ads > * {
+    margin: 0.5em;
 }
 
 /* Main Preview Panel -------------------------------------------- */
@@ -80,6 +121,30 @@ form#pdf-upload input[type=file] {
     font-size: 1.2em;
     padding: 2em 0;
 
+}
+
+#main > .fullpane {
+    padding-top: 2em;
+}
+
+#main > .pane .placeholder.error {
+    padding: 0 0 0 0.5em;
+}
+
+#main > .pane .placeholder.error h2 {
+    font-size: 1.2em;
+    line-height: 1.25em;
+    color: #990000;
+}
+
+#main > .pane .placeholder.error ul {
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+#main > .pane .placeholder.error ul > li {
+    text-align: center;
 }
 
 #left.pane {
@@ -129,28 +194,40 @@ form#pdf-upload input[type=file] {
     padding: 0;
 }
 
-/* Settings ------------------------------------------------------ */
+/* About Modal --------------------------------------------------- */
 
-.dialogs {
-    position: relative;
-}
+@media (min-width: 1200px) { 
+    .modal.fw {
+        width: 1100px;
+        margin-left: -620px;
+    }
+ }
+ 
+@media (min-width: 980px) and (max-width: 1199px) { 
+    .modal.fw {
+        width: 970px;
+        margin-left: -490px;
+    }
+ }
 
-#settings-dialog {
-    display: none;
-    position: absolute;
-    width: 60%;
-    z-index: 100;
-    background-color: #FFF;
-    border: 1px solid #111;
-    margin: 0 20% 10px 20%;
-    padding: 10px;
-    box-shadow: 1px 1px 1px #111;
-}
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { 
+    .modal.fw {
+        width: 760px;
+        margin-left: -380px;
+    }
+ }
+ 
+/* Landscape phone to portrait tablet */
+/* @media (min-width: 481px) and (max-width: 767px) { /* ...  } */
+ 
+/* Landscape phones and down */
+@media (max-width: 767px) { 
+    .modal.fw {
+        width: 460px;
+        margin-left: auto;
+        margin-right: auto;
+        /*margin-left: -230px;*/
+    }
+ }
 
-#settings-dialog .engine-type label.radio {
-    font-weight: bold;
-}
-
-#settings-dialog .engine-type > p {
-    margin-left: 20px;
-}

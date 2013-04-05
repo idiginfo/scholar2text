@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+    var uploadLocked = false;
+
     //
     // Disable '#' Links
     //
@@ -35,18 +37,24 @@ $(document).ready(function() {
     //
     // File upload button functionality
     //
+    $('#top h3.noscript').remove();
+    $('#pdf-upload').show();
+    $("#settings-toggle").show();
     $('#pdf-upload #pdffile-input').hide();
     $('#pdf-upload button[type=submit]').hide();
     $("#pdf-upload label[for='pdffile-input']").show();
-    $("#pdf-upload label[for='pdffile-input']").css('cursor', 'pointer');
-    $("#pdf-upload label[for='pdffile-input']").addClass('btn btn-primary');
+    $("#pdf-upload label[for='pdffile-input']").addClass('btn');
+    unlockUploadButton();
 
     $("#pdf-upload label[for='pdffile-input']").click(function(e) {
         e.preventDefault();
-        $('#pdf-upload #pdffile-input').click();
+
+        if (uploadLocked == false) {
+            $('#pdf-upload #pdffile-input').click();
+        }
     });
 
-    $('#pdf-upload #pdffile-input').change(function() {
+    $('#pdf-upload #pdffile-input').bind('change dialogclose', function() {
         var fname = basename($(this).val());
         $('#pdf-upload').submit();
     }); 
@@ -58,15 +66,20 @@ $(document).ready(function() {
     //
     $('#pdf-upload').ajaxForm({
         beforeSubmit: function(arr, $form, options) {
+
+            //Add engine selection to the form
             arr.push({ name: 'engine', value: $('input[name=engine]:checked').attr('value') });
 
+            //Hide the settings dialog if it is open
             $('#settings-dialog').slideUp('fast');
-            $.blockUI({ message: '<h1>Analyzing PDF...  Please wait</h1><p>(this can take a few moments)</p>' });
-            $('.blockUI').click(function() { /* nuthin */ });
+
+            //Disable the upload button
+            lockUploadButton();
         },        
 
         success: function(responseText, statusText, xhr, jq) {
-            console.log(responseText);
+
+            unlockUploadButton("Convert another PDF");
 
             $('#left.pane').html("<iframe src='" + responseText.pdfurl + "'></iframe>")
 
@@ -84,24 +97,58 @@ $(document).ready(function() {
         error: function(jqXHR, textStatus, errorThrown) {
 
             //Kill the loading dialog
-            $.unblockUI();
+            unlockUploadButton("Try Again");
             var resp = $.parseJSON(jqXHR.responseText);
 
             //Build the message
-            var msg = "<h1>There were errors during conversion</h1><ul>";
+            var msg = "<h2><i class='icon-exclamation-sign'></i> Whoops! Something went wrong.</h2><ul>";
             $.each(resp.messages, function(k,v) {
                 msg = msg + "<li>" + v + "</li>";
             });
             msg = msg + "</ul>";
 
-            //Use blockUI to display errors
-            $.blockUI({ message: msg, cursor: 'default', cursorReset: 'default', blockMsgClass: 'errorMsg'});
-            $('.blockUI').click(function() { $.unblockUI(); });
+            //Reset the PDF side
+            $('#left.pane').html("<p class='placeholder'>PDF will Appear Here</p>");
+
+            //Reset the text side with the errors
+            $('#right.pane').html("<div class='placeholder error'>" + msg + "</div>");
 
         }
     });
 
 });
+
+// ------------------------------------------------------------------
+
+function unlockUploadButton(text)
+{
+    if (typeof(text) == undefined) {
+        var text = "Convert a PDF";
+    }
+
+    var btnObj = $("#pdf-upload label[for='pdffile-input']");
+
+    btnObj.css('cursor', 'pointer');
+    btnObj.addClass('btn-primary btn-ready');
+    btnObj.removeClass('btn-danger btn-locked disabled');
+    btnObj.html(text);
+
+    uploadLocked = false;
+}
+
+// ------------------------------------------------------------------
+
+function lockUploadButton()
+{
+    uploadLocked = true;
+
+    var btnObj = $("#pdf-upload label[for='pdffile-input']");
+
+    btnObj.html("Converting&nbsp;&nbsp;<i class='icon-spinner icon-spin'></i>");
+    btnObj.css('cursor', 'auto');
+    btnObj.addClass('btn-danger btn-locked disabled');
+    btnObj.removeClass('btn-primary btn-ready');
+}
 
 // ------------------------------------------------------------------
 

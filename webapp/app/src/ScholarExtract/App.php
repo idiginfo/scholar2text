@@ -9,6 +9,7 @@ use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Upload\Storage\FileSystem as UploadFileSystem;
 use Symfony\Component\Process\ProcessBuilder;
+use Eloquent\Asplode\Asplode;
 use Pimple;
 
 /**
@@ -61,6 +62,10 @@ class App extends SilexApp
      */
     public function execute()
     {
+        //Errors become exceptions
+        Asplode::instance()->install();
+
+        //Run it!
         return $this->run();
     }
 
@@ -117,12 +122,18 @@ class App extends SilexApp
             return new Controller\Extractor($app['uploader'], $app['extractors'], $app['pdf_filepath']);
         });
 
+        $app['static.controller'] = $app->share(function() use ($app) {
+            return new Controller\StaticPages($app['twig']);
+        });
+
         //
         // Routes
         //
-        $app->get('/', "maininterface.controller:indexAction")->bind('front');
+        $app->get('/',           "maininterface.controller:indexAction")->bind('front');
         $app->get('/pdf/{file}', "extractor.controller:renderPdfAction")->bind('pdf');
-        $app->post('/upload', "extractor.controller:uploadAction")->bind('upload');
+        $app->post('/upload',    "extractor.controller:uploadAction")->bind('upload');
+        $app->get('/about',      "static.controller:aboutAction")->bind('about');
+        $app->get('/api',        "static.controller:apiDocsAction")->bind('apidocs');
     }
 
     // --------------------------------------------------------------
@@ -137,8 +148,8 @@ class App extends SilexApp
         //PDF Extractors
         $app['extractors'] = $this->share(function() use ($app) {
             return new Library\ExtractorBag(array(
-                new Extractor\CrossRefExtractor(),
-                new Extractor\LaPDFText(),
+                // new Extractor\CrossRefExtractor(),
+                // new Extractor\LaPDFText(),
                 new Extractor\PDFMiner(),
                 new Extractor\PopplerPDFtoTxt(),
             ));

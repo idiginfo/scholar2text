@@ -3,7 +3,7 @@
 namespace ScholarExtract\Extractor;
 
 use Guzzle\Http\Client as GuzzleClient;
-use RuntimeException;
+use ScholarExtract\ExtractorException;
 
 /**
  * PDFX Web Service -- NOT IN USE NOT IN USE
@@ -66,7 +66,7 @@ class PDFX implements ExtractorInterface
      */
     public function extract($filepath)
     {
-        throw new \BadMethodCallException("Not yet implemented");
+        throw new ExtractorException("Not yet implemented");
     }
 }
 

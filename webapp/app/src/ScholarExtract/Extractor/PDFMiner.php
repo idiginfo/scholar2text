@@ -3,7 +3,7 @@
 namespace ScholarExtract\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
-use RuntimeException;
+use ScholarExtract\ExtractorException;
 
 /**
  * PDFMiner Extractor
@@ -88,7 +88,7 @@ class PDFMiner implements ExtractorInterface
             return $process->getOutput();
         }
         else {
-            throw new RuntimeException($process->getExitCodeText());
+            throw new ExtractorException($process->getExitCodeText());
         }
 
         //Return the output

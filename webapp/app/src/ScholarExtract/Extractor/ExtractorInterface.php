@@ -1,6 +1,7 @@
 <?php
 
 namespace ScholarExtract\Extractor;
+use ScholarExtract\ExtractorException;
 
 /**
  * Extractor interface for different PDF extractors

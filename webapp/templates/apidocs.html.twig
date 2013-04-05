@@ -1,0 +1,63 @@
+<p>
+    XtractPDF features a simple REST API.
+</p>
+
+<h4>Rate Limiting</h4>
+
+<p>
+    While there is currently no authentication implemented for our API, PDF conversions
+    are rate limited to <strong>10 per minute</strong>.
+</p>
+
+<p>
+    You will receive a <code>503</code> response with a <code>Retry-After</code> header
+    if you exceed this rate limit.
+</p>
+
+<h3>This is a mess. Refer to IMDBAPI for a good example...</h3>
+
+<h4 class='underlined'>Summary</h4>
+
+<table class='table'>
+    <thead>
+        <tr>
+            <th>Endpoint</th>
+            <th>Response</th>
+            <th>Description</th>
+            <th>Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {# /{front} endpoint #}
+        <tr>
+            <td>GET <abbr title='{{ url('front') }}'>/</a></td>
+            <td>200</td>
+            <td>A summary of the services and conversion engines available</td>
+            <td>
+                <pre><code>asdfasdf</code></pre>
+            </td>
+        </tr>
+
+
+        {# /{front} endpoint #}
+        <tr>
+            <td colspan='2'>POST <abbr title='{{ url('front') }}/upload'>/</a></td>
+            <td>200</td>
+            <td>Upload a PDF</td>
+            <td>
+                <pre><code>asdfasdf</code></pre>
+            </td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>Invalid Request</td>
+            <td>
+                <pre><code>asdfasdf</code></pre>
+            </td>
+        </tr>
+        
+
+
+    </tbody>
+</table>

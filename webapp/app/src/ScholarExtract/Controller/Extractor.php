@@ -10,6 +10,8 @@ use Upload\Storage\FileSystem as UploadFileSystem;
 use Upload\Exception\UploadException;
 use RuntimeException, Exception;
 use ScholarExtract\Library\ExtractorBag;
+use SchoalrExtract\Library\ExtractorException;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Extractor Controller
@@ -56,6 +58,8 @@ class Extractor
      */
     public function uploadAction(Request $req, Application $app)
     {        
+        $stopwatch = new Stopwatch();
+
         //Setup a unique key to name and identify the uploaded file
         $key = md5(time() . rand(100000, 999999));
 
@@ -72,33 +76,39 @@ class Extractor
 
         //Do the uploads
         try {
+
+            $stopwatch->start('pdfconvert');
+
+            //Process the upload
             $f->upload();
 
+            //Get the filename
             $filename = $f->getNameWithExtension();
             $filepath = $this->filepath. '/' . $filename;
 
-            // try {
-            $txtOutput = $extractor->extract($filepath);    
-            // }
-            // catch (RuntimeException $e) {
-            //     $txtOutput = false;
-            // }
-            
-            if ( ! $txtOutput) {
-                $txtOutput = '';
-            }
+            //DO IT!!       
+            $txtOutput = (string) $extractor->extract($filepath);
+            $evt = $stopwatch->stop('pdfconvert');
 
+            //Prepare the output
             $output = array(
                 'pdfurl' => $app['url_generator']->generate('pdf', array('file' => $filename)),
                 'pdf'    => $filename,
                 'txt'    => $txtOutput,
-                'engine' => $extractor::getName()
+                'engine' => $extractor::getName(),
+                'time'   => $evt->getDuration() / 1000
             );
 
             return $app->json($output, 200);
         }
         catch (UploadException $e) {
             return $this->abort($app, $f->getErrors(), 400);
+        }
+        catch (ExtractorException $e) {
+            return $this->abort($app, $e->getMessage(), 500);
+        }
+        catch (Exception $e) {
+            return $this->abort($app, "An internal error has occured.", 500);
         }
     }
 
