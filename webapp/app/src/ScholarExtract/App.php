@@ -130,10 +130,10 @@ class App extends SilexApp
         // Routes
         //
         $app->get('/',           "maininterface.controller:indexAction")->bind('front');
-        $app->get('/pdf/{file}', "extractor.controller:renderPdfAction")->bind('pdf');
-        $app->post('/upload',    "extractor.controller:uploadAction")->bind('upload');
         $app->get('/about',      "static.controller:aboutAction")->bind('about');
         $app->get('/api',        "static.controller:apiDocsAction")->bind('apidocs');
+        $app->get('/pdf/{file}', "extractor.controller:renderPdfAction")->bind('pdf');
+        $app->post('/upload',    "extractor.controller:uploadAction")->bind('upload');
     }
 
     // --------------------------------------------------------------

@@ -2,61 +2,190 @@
     XtractPDF features a simple REST API.
 </p>
 
-<h4>Rate Limiting</h4>
+<h4 class='underline'>Rate Limiting</h4>
 
 <p>
     While there is currently no authentication implemented for our API, PDF conversions
-    are rate limited to <strong>10 per minute</strong>.
+    are currently rate limited to <strong>10 per minute</strong>.
 </p>
 
 <p>
-    You will receive a <code>503</code> response with a <code>Retry-After</code> header
+    You will receive a <code>503</code> HTTP response with a <code>Retry-After</code> header
     if you exceed this rate limit.
 </p>
 
-<h3>This is a mess. Refer to IMDBAPI for a good example...</h3>
+<h4 class='underline'>Quickstart</h4>
 
-<h4 class='underlined'>Summary</h4>
+<ol>
+    <li>
+        Convert a PDF by sending a multipart/data POST request to <var>http://--/upload</var>
+        <pre><code>curl -X POST -H "Content-Type: multipart/form-data; boundary=----------------------------4ebf00fbcf09" --data-binary @some.pdf http://--/upload</code></pre>
+    </li>
+    <li>Wait a few seconds (conversion can take a few seconds)</li>
+    <li>
+        Receive a JSON response back from the server:
+<pre><code>{
+    "pdfurl": "http://--/pdf/23482034013032345.pdf",
+    "pdf"   : "23482034013032345.pdf",
+    "txt"   : "The contents of the PDF converted into text",
+    "engine": "PDFMiner",
+    "time"  : 3.05
+}</code></pre>
+    </li>
+    <li>
+        Optionally download the original PDF via the one-time <var>pdfurl</var> link: http://--/pdf/23482034013032345.pdf
+    </li>
+</ol>
+
+<h4 class='underline'>Get information and list available extraction engines</h4>
 
 <table class='table'>
-    <thead>
-        <tr>
-            <th>Endpoint</th>
-            <th>Response</th>
-            <th>Description</th>
-            <th>Detail</th>
-        </tr>
-    </thead>
     <tbody>
-
-        {# /{front} endpoint #}
         <tr>
-            <td>GET <abbr title='{{ url('front') }}'>/</a></td>
-            <td>200</td>
-            <td>A summary of the services and conversion engines available</td>
+            <th scope='row'>Endpoint</th>
+            <td><code>GET http://--/</code></td>
+        </tr>
+
+        <tr>
+            <th scope='row'>Content-Type</th>
+            <td><code>application/json</code></td>
+        </tr>
+
+        <tr>
+            <th scope='row'>Parameters</th>
+            <td><em>None</em></td>
+        </tr>
+        <tr>
+            <th scope='row'><code>200</code> Response</th>
             <td>
-                <pre><code>asdfasdf</code></pre>
+                <pre><code>{
+    "title"      : "XtractPDF",
+    "description": "Extract text from PDFs",
+    "engines"    : {
+        "pdfminer": {
+            "title"      : "",
+            "description": "",
+            "url"        : ""
+        }
+        "poppler": {
+            "title"      : "",
+            "description": "",
+            "url"        : ""
+        }
+    }
+}</code></pre>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+
+<h4 class='underline'>Upload and convert a PDF</h4>
+
+<table class='table'>
+    <tbody>
+        <tr>
+            <th scope='row'>Endpoint</th>
+            <td><code>GET http://--/upload</code></td>
+        </tr>
+
+        <tr>
+            <th scope='row'>Content-Type</th>
+            <td><code>application/json</code></td>
+        </tr>
+
+        <tr>
+            <th rowspan='2' scope='row'>Parameters</th>
+            <td><em>string</em> engine</td>
+        </tr>
+        <tr>
+            <td><em>file</em> pdf-file.pdf</td>
+        </tr>
+        <tr>
+            <th scope='row'><code>200</code> Response</th>
+            <td>
+                <pre><code>{
+    "pdfurl": "http://--/12345678987654.pdf",
+    "pdf"   : "12345678987654.pdf",
+    "txt"   : "Hello World\nThis is the text from the PDF"
+    "engine": "pdfminer",
+    "time"  : 3.26
+}</code></pre>
+            </td>
+        </tr>
+
+        <tr>
+            <th scope='row'><code>400</code> Response</th>
+            <td>
+                <pre><code>{
+    "messages": [
+        "Invalid File",
+        "File too Large",
+        "More error messages..."
+    ]
+}</code></pre>
+            </td>
+        </tr>
+
+        <tr>
+            <th scope='row'><code>500</code> Response</th>
+            <td>
+                <pre><code>{
+    "messages": [
+        "An internal error has occured"
+    ]
+}</code></pre>
             </td>
         </tr>
 
 
-        {# /{front} endpoint #}
+    </tbody>
+</table>
+
+<h4 class='underline'>Retrieve original PDF via one-time link</h4>
+
+<table class='table'>
+    <tbody>
         <tr>
-            <td colspan='2'>POST <abbr title='{{ url('front') }}/upload'>/</a></td>
-            <td>200</td>
-            <td>Upload a PDF</td>
-            <td>
-                <pre><code>asdfasdf</code></pre>
-            </td>
+            <th scope='row'>Endpoint</th>
+            <td><code>GET http://--/pdf/[ID]</code></td>
+        </tr>
+
+        <tr>
+            <th scope='row'>Content-Type</th>
+            <td><code>application/pdf</code> <em>(success)</em> or <code>application/json</code> <em>(error)</em></td>
+        </tr>
+
+        <tr>
+            <th scope='row'>Parameters</th>
+            <td><em>none</em></td>
         </tr>
         <tr>
-            <td>400</td>
-            <td>Invalid Request</td>
+            <th scope='row'><code>200</code> Response</th>
+            <td>The PDF Data</td>
+        </tr>
+
+        <tr>
+            <th scope='row'><code>410</code> Response</th>
             <td>
-                <pre><code>asdfasdf</code></pre>
+                <pre><code>{
+    "messages": [
+        "PDF file gone.  PDF files are deleted immediately."
+    ]
+}</code></pre>
             </td>
         </tr>
-        
+
+        <tr>
+            <th scope='row'><code>500</code> Response</th>
+            <td>
+                <pre><code>{
+    "messages": [
+        "An internal error has occured"
+    ]
+}</code></pre>
+            </td>
+        </tr>
 
 
     </tbody>

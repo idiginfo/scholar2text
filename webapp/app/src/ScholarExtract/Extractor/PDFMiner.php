@@ -50,7 +50,7 @@ class PDFMiner implements ExtractorInterface
 
     static public function getDescription()
     {
-        return "A Python library for extracting text from a PDF.";        
+        return "A Python library for extracting text from a PDF";        
     }
 
     // --------------------------------------------------------------

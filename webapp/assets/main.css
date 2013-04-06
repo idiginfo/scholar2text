@@ -4,6 +4,9 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
+}
+
+body.maininterface {
     overflow: hidden;
 }
 
@@ -20,8 +23,14 @@ body {
 }
 
 #main {
+    position: relative;
+}
+
+body.maininterface #main {
     position: absolute;
-    top: 42px;
+    margin: 0;
+    padding: 0;
+    top: 90px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -192,6 +201,16 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
+}
+
+.underline {
+    margin-top: 1em;
+    margin-bottom: 0.25em;
+    border-bottom: 1px solid #BBB;
+}
+
+.table > tbody > tr:first-child > * {
+    border-top: none;
 }
 
 /* About Modal --------------------------------------------------- */

@@ -18,7 +18,7 @@
         {% block page_headers %}
         {% endblock %}
     </head>
-    <body>
+    <body class='{{ page_class | default('normal') }}'>
         
         {% block page_top %}
         <div id='top'>

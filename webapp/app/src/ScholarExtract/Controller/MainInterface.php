@@ -48,7 +48,8 @@ class MainInterface
         //Dynamic data for the main interface
         $data = array(
             'extractors'       => $this->extractors,
-            'defaultExtractor' => 'PDFMiner'
+            'defaultExtractor' => 'PDFMiner',
+            'page_class'       => 'maininterface'
         );
 
         //Display it
