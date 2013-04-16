@@ -1,9 +1,9 @@
 <?php
 
-namespace ScholarExtract\Extractor;
+namespace XtractPDF\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
-use ScholarExtract\ExtractorException;
+use XtractPDF\Library\ExtractorException;
 
 /**
  * PDFMiner Extractor
@@ -13,7 +13,7 @@ class PDFMiner implements ExtractorInterface
     /**
      * @var string  The python command to perform the conversion
      */
-    private $pyCmd;
+    private $pdfCmd;
     
     /**
      * @var Symfony\Component\Process\ProcessBuilder
@@ -31,12 +31,19 @@ class PDFMiner implements ExtractorInterface
      */
     public function __construct(ProcessBuilder $proc = null, $pdfCmd = null)
     {
-        $this->pyCmd = $pdfCmd ?: realpath('/usr/bin/pdf2txt');
+        $this->pdfCmd = $pdfCmd ?: realpath('/usr/bin/pdf2txt');
         $this->proc  = $proc ?: new ProcessBuilder();
 
-        if ( ! is_executable($this->pyCmd)) {
-            throw new RuntimeException("The command does not exist or is not executable: ". $this->pyCmd);
+        if ( ! is_executable($this->pdfCmd)) {
+            throw new ExtractorException("The command does not exist or is not executable: ". $this->pdfCmd);
         }
+    }
+
+    // --------------------------------------------------------------
+
+    static public function getSlug()
+    {
+        return 'pdfminer';
     }
 
     // --------------------------------------------------------------
@@ -74,7 +81,7 @@ class PDFMiner implements ExtractorInterface
         $proc = clone $this->proc;
 
         //Build the command
-        $proc->add($this->pyCmd);
+        $proc->add($this->pdfCmd);
         $proc->add('-t');
         $proc->add('text');
         $proc->add('-A');

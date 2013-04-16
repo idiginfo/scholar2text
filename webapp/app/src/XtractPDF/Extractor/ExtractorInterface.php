@@ -1,13 +1,20 @@
 <?php
 
-namespace ScholarExtract\Extractor;
-use ScholarExtract\ExtractorException;
+namespace XtractPDF\Extractor;
+use XtractPDF\Library\ExtractorException;
 
 /**
  * Extractor interface for different PDF extractors
  */
 interface ExtractorInterface
 {
+    /**
+     * @return string  A machine-readable name (alpha-dash)
+     */
+    static function getSlug();
+
+    // --------------------------------------------------------------
+
     /**
      * @return string  A link to more information
      */

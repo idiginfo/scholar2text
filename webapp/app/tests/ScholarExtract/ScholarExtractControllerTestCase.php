@@ -1,10 +1,10 @@
 <?php
 
-namespace ScholarExtract;
+namespace XtractPDF;
 
 use Silex\WebTestCase;
 
-abstract class ScholarExtractControllerTestCase extends WebTestCase
+abstract class XtractPDFControllerTestCase extends WebTestCase
 {
     /**
      * Implement the createApplication method to be used in all controller tests
@@ -18,4 +18,4 @@ abstract class ScholarExtractControllerTestCase extends WebTestCase
     }
 }
 
-/* EOF: ScholarExtractControllerTestCase.php */
+/* EOF: XtractPDFControllerTestCase.php */

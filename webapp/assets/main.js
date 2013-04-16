@@ -73,6 +73,10 @@ $(document).ready(function() {
             //Hide the settings dialog if it is open
             $('#settings-dialog').slideUp('fast');
 
+            //Display loading icons in the textareas
+            $("#left.pane").html("<p class='placeholder'>Converting <i class='icon-spinner icon-spin'></i><span class='patience'>(please be patient - this can take a moment)</span></p>");
+            $("#right.pane").html("<p class='placeholder'>Converting <i class='icon-spinner icon-spin'></i><span class='patience'>(please be patient - this can take a moment)</span></p>");
+
             //Disable the upload button
             lockUploadButton();
         },        
@@ -89,9 +93,6 @@ $(document).ready(function() {
             else {
                 $('#right.pane').html("<p class='placeholder error'>Could not Parse the Document<br/><br/>Some are simply unparsable.</p>");
             }
-
-
-            $.unblockUI();
         },
 
         error: function(jqXHR, textStatus, errorThrown) {

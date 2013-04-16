@@ -1,6 +1,6 @@
 <?php
 
-namespace ScholarExtract\Library;
+namespace XtractPDF\Library;
 
 use Exception;
 

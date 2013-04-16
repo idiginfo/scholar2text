@@ -1,4 +1,4 @@
-- Finish documentation
+- Finish documentation (CURL example incorrect)
 - Fix bug where one-time PDF view link isn't deleting the PDFs
 - Re-organize into new repository and set the tasks in this file as issues in Github
   - Add License

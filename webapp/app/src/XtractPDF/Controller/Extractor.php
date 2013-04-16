@@ -1,22 +1,23 @@
 <?php
 
-namespace ScholarExtract\Controller;
+namespace XtractPDF\Controller;
 
 use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
 use Upload\File as UploadFile;
 use Upload\Validation as UploadVal;
 use Upload\Storage\FileSystem as UploadFileSystem;
 use Upload\Exception\UploadException;
 use RuntimeException, Exception;
-use ScholarExtract\Library\ExtractorBag;
+use XtractPDF\Library\ExtractorBag;
 use SchoalrExtract\Library\ExtractorException;
 use Symfony\Component\Stopwatch\Stopwatch;
+use XtractPDF\Library\Controller;
+use Silex\ControllerCollection;
 
 /**
  * Extractor Controller
  */
-class Extractor
+class Extractor extends Controller
 {
     /**
      * @var  Upload\Storage\FileSystem
@@ -33,30 +34,52 @@ class Extractor
      */
     private $filepath;
 
+    /**
+     * @var Silex_URLGENERATOR
+     */
+    private $urlGenerator;
+
     // --------------------------------------------------------------
 
     /**
-     * Constructor
+     * Set the routes
      *
-     * @param Upload\Storage\FileSystem           $uploader
-     * @param ScholarExtract\Library\ExtractorBag $extractors
-     * @param string                              $filepath    Filepath of uploads
+     * Be sure to only set routes in here, and load all other resources
+     * in self::init() for performance reasons
+     *
+     * Run $app->get(), $app->match(), etc.. in this method
+     *
+     * @param Silex\Application $app
      */
-    public function __construct(UploadFileSystem $uploader, ExtractorBag $extractors, $filepath)
+    protected function setRoutes(ControllerCollection $routes)
     {
-        $this->uploader   = $uploader;
-        $this->extractors = $extractors;
-        $this->filepath   = $filepath;
+        $routes->post('/extract',    array($this, 'extractAction'))->bind('extract');
+        $routes->get('/pdf/{file}',  array($this, 'renderPdfAction'))->bind('viewpdf');
     }
 
     // --------------------------------------------------------------
 
     /**
-     * Upload Action
+     * The init method is run upon the controller executing
+     *
+     * Pull libraries form the DiC here in child classes
+     */
+    protected function init(Application $app)
+    {        
+        $this->uploader     = $app['uploader'];
+        $this->extractors   = $app['extractors'];
+        $this->filepath     = $app['pdf_filepath'];
+        $this->urlGenerator = $app['url_generator'];
+    }
+
+    // --------------------------------------------------------------
+
+    /**
+     * Extract (upload) Action
      *
      * POST /upload {engine=string}
      */
-    public function uploadAction(Request $req, Application $app)
+    public function extractAction()
     {        
         $stopwatch = new Stopwatch();
 
@@ -69,9 +92,10 @@ class Extractor
         $f->addValidations($this->getValidators()); //Set validations
 
         //Determine which extractor engine to use ($_POST['engine'])
-        $extractor = $this->extractors->get($req->request->get('engine') ?: 'PDFMiner');
+        $extractor = $this->extractors->get($this->getPostParams('engine') ?: 'poppler');
+
         if ( ! $extractor) {
-            return $this->abort($app, "The specified extractor does not exist", 400);
+            return $this->abort(400, "The specified extractor does not exist");
         }
 
         //Do the uploads
@@ -92,23 +116,22 @@ class Extractor
 
             //Prepare the output
             $output = array(
-                'pdfurl' => $app['url_generator']->generate('pdf', array('file' => $filename)),
-                'pdf'    => $filename,
-                'txt'    => $txtOutput,
-                'engine' => $extractor::getName(),
-                'time'   => $evt->getDuration() / 1000
+                'pdfurl'    => $this->urlGenerator->generate('viewpdf', array('file' => $filename)),
+                'txt'       => $txtOutput,
+                'extractor' => $extractor::getName(),
+                'time'      => $evt->getDuration() / 1000
             );
 
-            return $app->json($output, 200);
+            return $this->json($output);
         }
         catch (UploadException $e) {
-            return $this->abort($app, $f->getErrors(), 400);
+            return $this->abort(400, $f->getErrors());
         }
         catch (ExtractorException $e) {
-            return $this->abort($app, $e->getMessage(), 500);
+            return $this->abort(500, $e->getMessage());
         }
         catch (Exception $e) {
-            return $this->abort($app, "An internal error has occured.", 500);
+            return $this->abort(500, "An internal error has occured.");
         }
     }
 
@@ -121,39 +144,26 @@ class Extractor
      * 
      * @param string $file  The filename
      */
-    public function renderPdfAction(Request $req, Application $app, $file)
+    public function renderPdfAction($file)
     {
         //Get the filepath
         $filepath = $this->filepath . '/' . $file;
 
         //Will remove the file after it is done streaming
-        $app->finish(function() use ($filepath) {
-            if (file_exists($filepath)) {
-                unlink($filepath);
-            }
-        });
+        //@TODO: DEBUG THIS... or find another way
+        // $app->finish(function() use ($filepath) {
+        //     if (file_exists($filepath)) {
+        //         unlink($filepath);
+        //     }
+        // });
 
         //If the file is readable, then send it; else 404
         if (is_readable($filepath)) {
-            return $app->sendFile($filepath); //, 200, array('Content-Type' => 'application/pdf'));
+            return $this->sendFile($filepath);
         }
         else {
-            return $this->abort($app, "PDF file gone.  Uploaded PDFs are deleted immediately", 410);
+            return $this->abort(410, "PDF file gone.  Uploaded PDFs are deleted immediately");
         }
-    }
-
-    // --------------------------------------------------------------
-
-    /**
-     * Abort the request
-     */
-    protected function abort(Application $app, $messages, $code = 500)
-    {
-        if ( ! is_array($messages)) {
-            $messages = array($messages);
-        }
-
-        return $app->json(array('messages' => $messages), (int) $code);
     }
 
     // --------------------------------------------------------------

@@ -1,15 +1,16 @@
 <?php
 
-namespace ScholarExtract;
+namespace XtractPDF;
 
 use Silex\Application as SilexApp;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
-use Silex\Provider\TwigServiceProvider;
+use XtractPDF\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Upload\Storage\FileSystem as UploadFileSystem;
 use Symfony\Component\Process\ProcessBuilder;
-use Eloquent\Asplode\Asplode;
+use Whoops\Provider\Silex\WhoopsServiceProvider;
+use Whoops\Handler\JsonResponseHandler;
 use Pimple;
 
 /**
@@ -62,8 +63,10 @@ class App extends SilexApp
      */
     public function execute()
     {
-        //Errors become exceptions
-        Asplode::instance()->install();
+        if($this['debug']) {
+            $this->register(new WhoopsServiceProvider());
+            $this['whoops']->pushHandler(new JsonResponseHandler());
+        }
 
         //Run it!
         return $this->run();
@@ -111,29 +114,9 @@ class App extends SilexApp
         //
         // Controllers
         //
-
-        //Front Controller
-        $app['maininterface.controller'] = $app->share(function() use ($app) {
-            return new Controller\MainInterface($app['twig'], $app['extractors']);
-        });
-
-        //Extractor Controller
-        $app['extractor.controller'] = $app->share(function() use ($app) {
-            return new Controller\Extractor($app['uploader'], $app['extractors'], $app['pdf_filepath']);
-        });
-
-        $app['static.controller'] = $app->share(function() use ($app) {
-            return new Controller\StaticPages($app['twig']);
-        });
-
-        //
-        // Routes
-        //
-        $app->get('/',           "maininterface.controller:indexAction")->bind('front');
-        $app->get('/about',      "static.controller:aboutAction")->bind('about');
-        $app->get('/api',        "static.controller:apiDocsAction")->bind('apidocs');
-        $app->get('/pdf/{file}', "extractor.controller:renderPdfAction")->bind('pdf');
-        $app->post('/upload',    "extractor.controller:uploadAction")->bind('upload');
+        $app->mount('', new Controller\MainInterface());
+        $app->mount('', new Controller\Extractor());
+        $app->mount('', new Controller\StaticPages());
     }
 
     // --------------------------------------------------------------
@@ -148,10 +131,12 @@ class App extends SilexApp
         //PDF Extractors
         $app['extractors'] = $this->share(function() use ($app) {
             return new Library\ExtractorBag(array(
+                new Extractor\PopplerPDFtoTxt(),                
+                new Extractor\PDFMiner()
+
+                // IMPELMENT THESE LATER
                 // new Extractor\CrossRefExtractor(),
                 // new Extractor\LaPDFText(),
-                new Extractor\PDFMiner(),
-                new Extractor\PopplerPDFtoTxt(),
             ));
         });
     }

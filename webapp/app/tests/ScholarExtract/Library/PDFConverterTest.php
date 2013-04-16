@@ -1,6 +1,6 @@
 <?php
 
-namespace ScholarExtract\Library;
+namespace XtractPDF\Library;
 
 use PHPUnit_Framework_TestCase, Mockery;
 
@@ -9,7 +9,7 @@ class PDFConverterTest extends PHPUnit_Framework_TestCase
     public function testInstantiateSucceeds()
     {
         $obj = new PDFConverter();
-        $this->assertInstanceOf('ScholarExtract\Library\PDFConverter', $obj);
+        $this->assertInstanceOf('XtractPDF\Library\PDFConverter', $obj);
     }
 
     // --------------------------------------------------------------

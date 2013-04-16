@@ -1,9 +1,9 @@
 <?php
 
-namespace ScholarExtract\Extractor;
+namespace XtractPDF\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
-use ScholarExtract\ExtractorException;
+use XtractPDF\Library\ExtractorException;
 
 /**
  * PopplerPDFtoTxt Extractor
@@ -33,6 +33,17 @@ class PopplerPDFtoTxt implements ExtractorInterface
     {
         $this->cmd  = $cmd ?: realpath('/usr/bin/pdftotext');
         $this->proc = $proc ?: new ProcessBuilder();
+
+        if ( ! is_executable($this->cmd)) {
+            throw new ExtractorException("The command does not exist or is not executable: ". $this->cmd);
+        }        
+    }
+
+    // --------------------------------------------------------------
+
+    static public function getSlug()
+    {
+        return 'poppler';
     }
 
     // --------------------------------------------------------------

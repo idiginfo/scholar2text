@@ -3,14 +3,14 @@
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
 
     <testsuites>
-        <testsuite name="ScholarExtract Test Suite">
+        <testsuite name="XtractPDF Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix='.php'>./src/ScholarExtract</directory>
+            <directory suffix='.php'>./src/XtractPDF</directory>
         </whitelist>
     </filter>
 </phpunit>

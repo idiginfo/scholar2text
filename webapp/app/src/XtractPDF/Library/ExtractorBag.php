@@ -1,8 +1,8 @@
 <?php
 
-namespace ScholarExtract\Library;
+namespace XtractPDF\Library;
 
-use ScholarExtract\Extractor\ExtractorInterface;
+use XtractPDF\Extractor\ExtractorInterface;
 use IteratorAggregate, Countable, ArrayIterator;
 use LogicException;
 
@@ -14,7 +14,7 @@ class ExtractorBag implements IteratorAggregate, Countable
     private $objs;
 
     /**
-     * @param ScholarExtract\Extractor\ExtractorInterface
+     * @param XtractPDF\Extractor\ExtractorInterface
      */
     private $default;
 
@@ -29,7 +29,7 @@ class ExtractorBag implements IteratorAggregate, Countable
 
     public function add(ExtractorInterface $extractor)
     {
-        $this->objs[$extractor::getName()] = $extractor;
+        $this->objs[$extractor::getSlug()] = $extractor;
     }
 
     // --------------------------------------------------------------
@@ -43,25 +43,47 @@ class ExtractorBag implements IteratorAggregate, Countable
 
     // --------------------------------------------------------------
 
-    public function get($extractorName)
+    public function get($extractorSlug)
     {
-        return ($this->has($extractorName)) ? $this->objs[$extractorName] : null;
+        return ($this->has($extractorSlug)) ? $this->objs[$extractorSlug] : null;
     }
 
     // --------------------------------------------------------------
 
-    public function has($extractorName)
+    public function has($extractorSlug)
     {
-        return isset($this->objs[$extractorName]);
+        return isset($this->objs[$extractorSlug]);
     }
 
     // --------------------------------------------------------------
 
-    public function remove($extractorName)
+    public function remove($extractorSlug)
     {
-        if ($this->has($extractorName)) {
-            unset($this->objs[$extractorName]);
+        if ($this->has($extractorSlug)) {
+            unset($this->objs[$extractorSlug]);
         }
+    }
+
+    // --------------------------------------------------------------
+
+    /**
+     * Array of metadata about each extractor
+     *
+     * @return array
+     */
+    public function getExtractorInfo()
+    {
+        $output = array();
+
+        foreach($this as $ext) {
+            $output[$ext::getSlug()] = array(
+                'name'        => $ext::getName(),
+                'link'        => $ext::getLink(),
+                'description' => $ext::getDescription()
+            );
+        }
+
+        return $output;
     }
 
     // --------------------------------------------------------------

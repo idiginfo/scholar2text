@@ -18,6 +18,6 @@ foreach($checkFiles as $file) {
 $autoload = require_once $checkFiles['autoload'];
 
 //Manually Require Some Files (may fix this later)
-require_once(__DIR__ . '/ScholarExtract/ScholarExtractControllerTestCase.php');
+require_once(__DIR__ . '/XtractPDF/XtractPDFControllerTestCase.php');
 
 /* EOF: bootstrap.php */

@@ -18,14 +18,15 @@
 
 <ol>
     <li>
-        Convert a PDF by sending a multipart/data POST request to <var>http://--/upload</var>
-        <pre><code>curl -X POST -H "Content-Type: multipart/form-data; boundary=----------------------------4ebf00fbcf09" --data-binary @some.pdf http://--/upload</code></pre>
+        Convert a PDF by sending a multipart/data POST request to <var>{{ site_url }}/extract</var>
+        <pre><code>curl -X POST -H "Content-Type: multipart/form-data; boundary=----------------------------4ebf00fbcf09" --data-binary @some.pdf {{ site_url }}/extract</code></pre>
+        <pre><code>curl -X POST -H "Content-Type: multipart/form-data; boundary=----------------------------4ebf00fbcf09" -d $'------------------------------4ebf00fbcf09\r\nContent-Disposition: form-data; name="example"\r\n\r\ntest\r\n------------------------------4ebf00fbcf09--\r\n' http://localhost:3000/test</code></pre>
     </li>
     <li>Wait a few seconds (conversion can take a few seconds)</li>
     <li>
         Receive a JSON response back from the server:
 <pre><code>{
-    "pdfurl": "http://--/pdf/23482034013032345.pdf",
+    "pdfurl": "{{ site_url }}/pdf/23482034013032345.pdf",
     "pdf"   : "23482034013032345.pdf",
     "txt"   : "The contents of the PDF converted into text",
     "engine": "PDFMiner",
@@ -33,7 +34,7 @@
 }</code></pre>
     </li>
     <li>
-        Optionally download the original PDF via the one-time <var>pdfurl</var> link: http://--/pdf/23482034013032345.pdf
+        Optionally download the original PDF via the one-time <var>pdfurl</var> link: {{ site_url }}/pdf/23482034013032345.pdf
     </li>
 </ol>
 
@@ -43,7 +44,7 @@
     <tbody>
         <tr>
             <th scope='row'>Endpoint</th>
-            <td><code>GET http://--/</code></td>
+            <td><code>GET {{ site_url }}/</code></td>
         </tr>
 
         <tr>
@@ -86,7 +87,7 @@
     <tbody>
         <tr>
             <th scope='row'>Endpoint</th>
-            <td><code>GET http://--/upload</code></td>
+            <td><code>POST {{ site_url }}/extract</code></td>
         </tr>
 
         <tr>
@@ -105,7 +106,7 @@
             <th scope='row'><code>200</code> Response</th>
             <td>
                 <pre><code>{
-    "pdfurl": "http://--/12345678987654.pdf",
+    "pdfurl": "{{ site_url }}/12345678987654.pdf",
     "pdf"   : "12345678987654.pdf",
     "txt"   : "Hello World\nThis is the text from the PDF"
     "engine": "pdfminer",
@@ -148,7 +149,7 @@
     <tbody>
         <tr>
             <th scope='row'>Endpoint</th>
-            <td><code>GET http://--/pdf/[ID]</code></td>
+            <td><code>GET {{ site_url }}/pdf/[ID]</code></td>
         </tr>
 
         <tr>

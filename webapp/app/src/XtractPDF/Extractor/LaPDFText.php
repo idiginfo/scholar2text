@@ -1,59 +1,66 @@
 <?php
 
-namespace ScholarExtract\Extractor;
+namespace XtractPDF\Extractor;
 
-use Guzzle\Http\Client as GuzzleClient;
-use ScholarExtract\ExtractorException;
+use Symfony\Component\Process\ProcessBuilder;
+use XtractPDF\Library\ExtractorException;
 
 /**
- * PDFX Web Service -- NOT IN USE NOT IN USE
+ * LaPDFText Extractor
  */
-class PDFX implements ExtractorInterface
+class LaPDFText implements ExtractorInterface
 {
     /**
      * @var string  The python command to perform the conversion
      */
-    private $guzzle;
+    private $cmd;
     
     /**
-     * @var string  The endpoint URL
+     * @var Symfony\Component\Process\ProcessBuilder
      */ 
-    private $url;
+    private $proc;
 
     // --------------------------------------------------------------
 
-
+    
     /**
      * Constructor
      *
-     * @param Guzzle\Http\Client
-     * @param string  The URL to the endpoint
+     * @param Symfony\Component\Process\ProcessBuilder
+     * @param string  The command (null=default)
      */
-    public function __construct(GuzzleClient $client = null, $url = 'http://example.com/xxx')
+    public function __construct(ProcessBuilder $proc = null, $cmd = null)
     {
-        $this->guzzle = $client ?: new GuzzleClient();
-        $this->url    = $url;
+        $this->cmd  = $cmd ?: realpath('somecmd');
+        $this->proc = $proc ?: new ProcessBuilder();
+    }
+
+    // --------------------------------------------------------------
+
+    static public function getSlug()
+    {
+        return 'lapdftext';
     }
     
     // --------------------------------------------------------------
 
     static public function getName()
     {
-        return "PDFX";
+        return "LaPDFText";
     }
 
     // --------------------------------------------------------------
 
     static public function getDescription()
     {
-        return "A fully-automated PDF-to-XML conversion of scientific articles";        
+        return "A JAVA application for extracting PDF to XML for scientific articles.";        
     }
 
     // --------------------------------------------------------------
 
     static public function getLink()
     {
-        return "http://pdfx.cs.man.ac.uk/";
+        return "https://code.google.com/p/lapdftext/";
     }
 
     // --------------------------------------------------------------
@@ -70,4 +77,4 @@ class PDFX implements ExtractorInterface
     }
 }
 
-/* EOF: PDFX.php */
+/* EOF: LaPDFText.php */

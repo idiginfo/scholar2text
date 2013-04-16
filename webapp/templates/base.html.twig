@@ -9,10 +9,10 @@
         <meta name='description' content='A simple tool to convert PDFs to Text' />
         <meta name='keywords' content='PDF, TXT, Text, Portable Document Format, Convert PDF, PDF to Text, Extract PDF' />
 
-        <link href="{{ path('front') }}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="{{ path('front') }}/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="{{ path('front') }}/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
-        <link href="{{ path('front') }}/assets/main.css" rel="stylesheet">
+        <link href="{{ base_url }}/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="{{ base_url }}/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="{{ base_url }}/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="{{ base_url }}/assets/main.css" rel="stylesheet">
         {% endblock %}
 
         {% block page_headers %}
@@ -34,9 +34,9 @@
                        
                     </header>
                     <div class='span9 ads'>
-                        <img src='{{ path('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
-                        <img src='{{ path('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
-                        <img src='{{ path('front') }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
+                        <img src='{{ base_url }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
+                        <img src='{{ base_url }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
+                        <img src='{{ base_url }}/assets/img/ad_dummy.png' alt='Dummy Ad' />
                     </div>
                 </div>
             </div>
@@ -49,9 +49,9 @@
         {% block base_js %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
             <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-            <script type='text/javascript' src='{{ path('front') }}/assets/bootstrap/js/bootstrap.min.js'></script>
-            <script type='text/javascript' src='{{ path('front') }}/assets/jquery-form.js'></script>
-            <script type='text/javascript' src='{{ path('front') }}/assets/main.js'></script>
+            <script type='text/javascript' src='{{ base_url }}/assets/bootstrap/js/bootstrap.min.js'></script>
+            <script type='text/javascript' src='{{ base_url }}/assets/jquery-form.js'></script>
+            <script type='text/javascript' src='{{ base_url }}/assets/main.js'></script>
         {% endblock %}
         
         {% block page_js %}

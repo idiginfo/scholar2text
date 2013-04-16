@@ -1,14 +1,14 @@
 <?php
 
-namespace ScholarExtract\Extractor;
+namespace XtractPDF\Extractor;
 
 use Symfony\Component\Process\ProcessBuilder;
-use ScholarExtract\ExtractorException;
+use XtractPDF\Library\ExtractorException;
 
 /**
- * LaPDFText Extractor
+ * CrossRef Extractor
  */
-class LaPDFText implements ExtractorInterface
+class CrossRefExtractor implements ExtractorInterface
 {
     /**
      * @var string  The python command to perform the conversion
@@ -22,38 +22,44 @@ class LaPDFText implements ExtractorInterface
 
     // --------------------------------------------------------------
 
-    
     /**
      * Constructor
      *
      * @param Symfony\Component\Process\ProcessBuilder
-     * @param string  The command (null=default)
+     * @param string  The python command to run for conversion(null = default)
      */
-    public function __construct(ProcessBuilder $proc = null, $cmd = null)
+    public function __construct(ProcessBuilder $proc = null, $pdfCmd = null)
     {
-        $this->cmd  = $cmd ?: realpath('somecmd');
+        $this->cmd  = $pdfCmd ?: realpath(__DIR__ . '/../../../../../python/scholar2txt.py');
         $this->proc = $proc ?: new ProcessBuilder();
     }
 
     // --------------------------------------------------------------
 
+    static public function getSlug()
+    {
+        return 'crossref';
+    }
+    
+    // --------------------------------------------------------------
+
     static public function getName()
     {
-        return "LaPDFText";
+        return "CrossRef PDFExtractor for Citations";
     }
 
     // --------------------------------------------------------------
 
     static public function getDescription()
     {
-        return "A JAVA application for extracting PDF to XML for scientific articles.";        
+        return "A Ruby library to extract bibliographic citations from a PDF";        
     }
 
     // --------------------------------------------------------------
 
     static public function getLink()
     {
-        return "https://code.google.com/p/lapdftext/";
+        return "https://github.com/CrossRef/pdfextract";
     }
 
     // --------------------------------------------------------------
@@ -70,4 +76,5 @@ class LaPDFText implements ExtractorInterface
     }
 }
 
-/* EOF: LaPDFText.php */
+
+/* EOF: CrossRefExtractor.php */

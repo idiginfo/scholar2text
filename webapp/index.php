@@ -1,6 +1,6 @@
 <?php
 
-namespace ScholarExtract;
+namespace XtractPDF;
 
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;

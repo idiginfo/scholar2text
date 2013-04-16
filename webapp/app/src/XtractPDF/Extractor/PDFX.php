@@ -1,24 +1,24 @@
 <?php
 
-namespace ScholarExtract\Extractor;
+namespace XtractPDF\Extractor;
 
-use Symfony\Component\Process\ProcessBuilder;
-use ScholarExtract\ExtractorException;
+use Guzzle\Http\Client as GuzzleClient;
+use XtractPDF\Library\ExtractorException;
 
 /**
- * CrossRef Extractor
+ * PDFX Web Service -- NOT IN USE NOT IN USE
  */
-class CrossRefExtractor implements ExtractorInterface
+class PDFX implements ExtractorInterface
 {
     /**
      * @var string  The python command to perform the conversion
      */
-    private $cmd;
+    private $guzzle;
     
     /**
-     * @var Symfony\Component\Process\ProcessBuilder
+     * @var string  The endpoint URL
      */ 
-    private $proc;
+    private $url;
 
     // --------------------------------------------------------------
 
@@ -26,34 +26,41 @@ class CrossRefExtractor implements ExtractorInterface
     /**
      * Constructor
      *
-     * @param Symfony\Component\Process\ProcessBuilder
-     * @param string  The python command to run for conversion(null = default)
+     * @param Guzzle\Http\Client
+     * @param string  The URL to the endpoint
      */
-    public function __construct(ProcessBuilder $proc = null, $pdfCmd = null)
+    public function __construct(GuzzleClient $client = null, $url = 'http://example.com/xxx')
     {
-        $this->cmd  = $pdfCmd ?: realpath(__DIR__ . '/../../../../../python/scholar2txt.py');
-        $this->proc = $proc ?: new ProcessBuilder();
+        $this->guzzle = $client ?: new GuzzleClient();
+        $this->url    = $url;
     }
     
     // --------------------------------------------------------------
 
+    static public function getSlug()
+    {
+        return 'pdfx';
+    }
+
+    // --------------------------------------------------------------
+
     static public function getName()
     {
-        return "CrossRef PDFExtractor for Citations";
+        return "PDFX";
     }
 
     // --------------------------------------------------------------
 
     static public function getDescription()
     {
-        return "A Ruby library to extract bibliographic citations from a PDF";        
+        return "A fully-automated PDF-to-XML conversion of scientific articles";        
     }
 
     // --------------------------------------------------------------
 
     static public function getLink()
     {
-        return "https://github.com/CrossRef/pdfextract";
+        return "http://pdfx.cs.man.ac.uk/";
     }
 
     // --------------------------------------------------------------
@@ -70,5 +77,4 @@ class CrossRefExtractor implements ExtractorInterface
     }
 }
 
-
-/* EOF: CrossRefExtractor.php */
+/* EOF: PDFX.php */

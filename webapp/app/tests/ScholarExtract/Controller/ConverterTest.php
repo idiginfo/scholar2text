@@ -1,10 +1,10 @@
 <?php
 
-namespace ScholarExtract\Controller;
+namespace XtractPDF\Controller;
 
-use ScholarExtract\ScholarExtractControllerTestCase;
+use XtractPDF\XtractPDFControllerTestCase;
 
-class ConverterTest extends ScholarExtractControllerTestCase
+class ConverterTest extends XtractPDFControllerTestCase
 {
     public function testFrontPageLoads()
     {

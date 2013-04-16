@@ -132,6 +132,14 @@ body.maininterface #main {
 
 }
 
+#main > .pane .placeholder .patience {
+    display: block;
+    margin-top: 0.3em;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+
 #main > .fullpane {
     padding-top: 2em;
 }
@@ -214,6 +222,12 @@ body.maininterface #main {
 }
 
 /* About Modal --------------------------------------------------- */
+
+.modal-header h3 a.breakout {
+    line-height: 1em;
+    font-size: 0.6em;
+    vertical-align: middle;
+}
 
 @media (min-width: 1200px) { 
     .modal.fw {
