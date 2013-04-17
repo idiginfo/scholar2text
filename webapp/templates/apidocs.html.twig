@@ -18,16 +18,28 @@
 
 <ol>
     <li>
-        Convert a PDF by sending a multipart/data POST request to <var>{{ site_url }}/extract</var>
-        <pre><code>curl -X POST -H "Content-Type: multipart/form-data; boundary=----------------------------4ebf00fbcf09" --data-binary @some.pdf {{ site_url }}/extract</code></pre>
-        <pre><code>curl -X POST -H "Content-Type: multipart/form-data; boundary=----------------------------4ebf00fbcf09" -d $'------------------------------4ebf00fbcf09\r\nContent-Disposition: form-data; name="example"\r\n\r\ntest\r\n------------------------------4ebf00fbcf09--\r\n' http://localhost:3000/test</code></pre>
+        Convert a PDF by sending a <var>multipart/data</var> POST request to <var>{{ site_url }}/extract</var>
+        <pre><code>POST /scholar2text/webapp/extract HTTP/1.1
+Accept: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryz1uALq8KdpPR7FDI
+Accept-Charset: utf-8;q=1.0,*;q=0.3
+
+------WebKitFormBoundaryz1uALq8KdpPR7FDI
+Content-Disposition: form-data; name="pdffile"; filename="SOMEDF.pdf"
+Content-Type: application/pdf
+
+
+------WebKitFormBoundaryz1uALq8KdpPR7FDI
+Content-Disposition: form-data; name="engine"
+
+poppler
+------WebKitFormBoundaryz1uALq8KdpPR7FDI--</code></pre>
     </li>
     <li>Wait a few seconds (conversion can take a few seconds)</li>
     <li>
         Receive a JSON response back from the server:
 <pre><code>{
     "pdfurl": "{{ site_url }}/pdf/23482034013032345.pdf",
-    "pdf"   : "23482034013032345.pdf",
     "txt"   : "The contents of the PDF converted into text",
     "engine": "PDFMiner",
     "time"  : 3.05
@@ -53,6 +65,11 @@
         </tr>
 
         <tr>
+            <th scope='row'>Required Headers</th>
+            <td><em>None</em></td>
+        </tr>
+
+        <tr>
             <th scope='row'>Parameters</th>
             <td><em>None</em></td>
         </tr>
@@ -64,14 +81,14 @@
     "description": "Extract text from PDFs",
     "engines"    : {
         "pdfminer": {
-            "title"      : "",
-            "description": "",
-            "url"        : ""
+            "name"       : "PDFMiner",
+            "description": "A Python library for extracting text from a PDF",
+            "url"        : "http://www.unixuser.org/~euske/python/pdfminer/"
         }
         "poppler": {
-            "title"      : "",
-            "description": "",
-            "url"        : ""
+            "name"       : "Poppler PDF to Text",
+            "description": "A CLI PDF to Text Tool",
+            "url"        : "http://poppler.freedesktop.org/"
         }
     }
 }</code></pre>
@@ -96,18 +113,25 @@
         </tr>
 
         <tr>
-            <th rowspan='2' scope='row'>Parameters</th>
-            <td><em>string</em> engine</td>
+            <th scope='row'>Parameters</th>
+            <td>
+                <table class='table table-condensed'>
+                    <tr><td>string</td> <td><strong>engine</strong></td></tr>
+                    <tr><td>file</td>   <td><strong>pdffile</strong></td></tr>
+                </table>
+            </td>
         </tr>
+
         <tr>
-            <td><em>file</em> pdf-file.pdf</td>
+            <th scope='row'>Required Headers</th>
+            <td><code>Content-Type: multipart/form-data</code></td>
         </tr>
+
         <tr>
             <th scope='row'><code>200</code> Response</th>
             <td>
                 <pre><code>{
     "pdfurl": "{{ site_url }}/12345678987654.pdf",
-    "pdf"   : "12345678987654.pdf",
     "txt"   : "Hello World\nThis is the text from the PDF"
     "engine": "pdfminer",
     "time"  : 3.26
@@ -161,6 +185,13 @@
             <th scope='row'>Parameters</th>
             <td><em>none</em></td>
         </tr>
+
+        <tr>
+            <th scope='row'>Required Headers</th>
+            <td><em>None</em></td>
+        </tr>
+
+
         <tr>
             <th scope='row'><code>200</code> Response</th>
             <td>The PDF Data</td>
@@ -171,7 +202,7 @@
             <td>
                 <pre><code>{
     "messages": [
-        "PDF file gone.  PDF files are deleted immediately."
+        "PDF file gone.  PDF files are deleted immediately upon first viewing, or after five minutes"
     ]
 }</code></pre>
             </td>
