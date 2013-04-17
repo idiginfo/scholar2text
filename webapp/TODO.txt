@@ -1,9 +1,5 @@
-- Finish documentation (CURL example incorrect)
-- Fix bug where one-time PDF view link isn't deleting the PDFs
-- Re-organize into new repository and set the tasks in this file as issues in Github
-  - Add License
-  - Fork to private repo in Bitbucket for Google Ads
-- Build API with rate-limiting (see http://wiki.nginx.org/HttpLimitReqModule)
+- Re-organize into new repository
+- Add License
 
 BUILD VM JUST FOR THIS (:)
 --- [[ all typical PHP stuff ]]

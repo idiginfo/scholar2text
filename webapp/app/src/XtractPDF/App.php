@@ -9,6 +9,7 @@ use XtractPDF\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Upload\Storage\FileSystem as UploadFileSystem;
 use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Console\Application as ConsoleApp;
 use Whoops\Provider\Silex\WhoopsServiceProvider;
 use Whoops\Handler\JsonResponseHandler;
 use Pimple;
@@ -34,7 +35,10 @@ class App extends SilexApp
     {
         $cls = get_called_class();
         $obj = new $cls($mode);
-        return $obj->execute();
+
+        return (php_sapi_name() == 'cli')
+            ? $obj->executeCli()
+            : $obj->executeWeb();
     }
 
     // --------------------------------------------------------------
@@ -53,7 +57,6 @@ class App extends SilexApp
 
         //Load libraries
         $this->loadCommonLibraries();
-        $this->loadWebLibraries();        
     }
 
     // --------------------------------------------------------------
@@ -61,8 +64,12 @@ class App extends SilexApp
     /**
      * Main Execute Method
      */
-    public function execute()
+    public function executeWeb()
     {
+        //Load Web Libraries
+        $this->loadWebLibraries();        
+
+        //Set Whoops Debugger
         if($this['debug']) {
             $this->register(new WhoopsServiceProvider());
             $this['whoops']->pushHandler(new JsonResponseHandler());
@@ -70,6 +77,19 @@ class App extends SilexApp
 
         //Run it!
         return $this->run();
+    }
+
+    // --------------------------------------------------------------
+
+    public function executeCli()
+    {
+        $consoleApp = new ConsoleApp('XtractPDF');
+
+        //Load CLI Commands
+        $consoleApp->add(new Command\DeleteOldFiles($this['pdf_filepath']));
+
+        //Run it
+        $consoleApp->run();
     }
 
     // --------------------------------------------------------------

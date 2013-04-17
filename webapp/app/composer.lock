@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "20418424f9f7cc5f80662cb5d66b7a4b",
+    "hash": "381fedb3e6df6a71e6fc059573661465",
     "packages": [
         {
             "name": "codeguy/upload",
@@ -100,16 +100,16 @@
         },
         {
             "name": "guzzle/guzzle",
-            "version": "v3.4.0",
+            "version": "v3.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "v3.4.0"
+                "reference": "v3.4.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/v3.4.0",
-                "reference": "v3.4.0",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/v3.4.1",
+                "reference": "v3.4.1",
                 "shasum": ""
             },
             "require": {
@@ -190,7 +190,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2013-04-12 05:58:15"
+            "time": "2013-04-16 20:56:26"
         },
         {
             "name": "pimple/pimple",
@@ -357,6 +357,53 @@
                 "microframework"
             ],
             "time": "2013-04-11 12:23:56"
+        },
+        {
+            "name": "symfony/console",
+            "version": "v2.2.1",
+            "target-dir": "Symfony/Component/Console",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Console.git",
+                "reference": "v2.2.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/v2.2.1",
+                "reference": "v2.2.1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Console\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "http://symfony.com",
+            "time": "2013-03-19 20:48:08"
         },
         {
             "name": "symfony/event-dispatcher",
